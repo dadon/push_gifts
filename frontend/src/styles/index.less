@@ -1,0 +1,58 @@
+@import "fonts";
+
+html, * {
+  font-family: "Inter";
+}
+
+body {
+  background-color: #f8f8f8;
+}
+
+.nav {
+  width: 100%;
+  background-color: #2c2c2c;
+  height: 72px;
+  padding: 16px;
+  box-sizing: border-box;
+
+  .logo {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    background: url("../assets/minter_logo.svg") no-repeat;
+
+    padding-left: 60px;
+  }
+
+  a {
+    display: block;
+    padding-top: 3px;
+    font-weight: bold;
+    font-size: 24px;
+    color: white;
+  }
+}
+
+
+button {
+  padding: 10px;
+  cursor: pointer;
+}
+
+button:active {
+  outline: none;
+  border: none;
+}
+
+button:focus {
+  outline: 0;
+}
+
+button:hover {
+  filter: brightness(90%);
+}
+
+
+@import "wallet";
+@import "admin";
+@import "slider";

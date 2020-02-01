@@ -1,0 +1,35 @@
+{
+  "name": "minterpush-backend",
+  "version": "1.0.0",
+  "description": "Backend for MinterPush Hackathon prototype",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.2",
+    "@types/node": "^12.11.5",
+    "@types/redis": "^2.8.14",
+    "nodemon": "^1.19.4",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.4"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "big.js": "^5.2.2",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "geoip-country": "^4.0.3",
+    "minter-js-sdk": "^0.26.1",
+    "minterjs-wallet": "^4.0.4",
+    "nanoid": "^2.1.4",
+    "nodemailer": "^6.4.2",
+    "redis": "^2.8.0",
+    "twilio": "^3.39.3"
+  }
+}

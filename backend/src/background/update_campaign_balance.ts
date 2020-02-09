@@ -1,6 +1,7 @@
 import { BlockHandler, Campaign } from "../types";
 import { addRefillTx, getAllCampaigns } from "../db/campaign";
 import * as minter from "../external_api/minter";
+import { setCoinPrice } from "../db/background";
 
 class UpdateCampaignBalance implements BlockHandler {
     addresses: string[];
@@ -26,6 +27,8 @@ class UpdateCampaignBalance implements BlockHandler {
 
             await addRefillTx(campaign, tx.hash, minter.parseAmount(tx.data.value), tx.data.coin, tx.from);
         }
+
+        await this.updateCampaignCoinsPrice();
     }
 
     getCampaign(address: string): Campaign {
@@ -33,6 +36,27 @@ class UpdateCampaignBalance implements BlockHandler {
             if (campaign.address === address) return campaign;
         }
         return null;
+    }
+
+    async updateCampaignCoinsPrice() {
+        let coins = this.campaigns.map(el => el.coin).filter(el => el !== undefined);
+        coins = [...new Set(coins)];
+
+        console.log("coins", coins);
+
+        for (let coin of coins) {
+            if (coin === process.env.CHAIN_COIN) continue;
+
+            const result = await minter.sdk.estimateCoinBuy({
+                coinToBuy: process.env.CHAIN_COIN,
+                valueToBuy: 1,
+                coinToSell: coin,
+            });
+
+            if (result && result["will_pay"]) {
+                await setCoinPrice(coin, result["will_pay"]);
+            }
+        }
     }
 }
 

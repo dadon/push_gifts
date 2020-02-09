@@ -1,5 +1,6 @@
 import crypto from "crypto";
 
+
 const IV_LENGTH = 16; // For AES, this is always 16
 
 export function encrypt(text: string, encryptionKey: string): string {

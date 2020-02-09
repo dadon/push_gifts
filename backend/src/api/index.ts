@@ -13,9 +13,12 @@ export default function (port) {
     app.use(bodyParser.json());
 
     app.post("/campaign/create", campaign.create);
+    app.post("/campaign/sms", campaign.sms);
     app.get("/campaign/:campaignId", campaign.get);
-    app.get("/campaign-public/:campaignPublicId", campaign.getPublic);
     app.post("/campaign/:campaignId", campaign.update);
+
+    app.get("/campaigns", campaign.getListByUid);
+    app.get("/campaign-public/:campaignPublicId", campaign.getPublic);
 
     app.post("/check-phone", user.checkPhone);
     app.post("/user/create", user.create);

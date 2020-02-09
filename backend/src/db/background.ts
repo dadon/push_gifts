@@ -1,5 +1,6 @@
 import rdb from "./rdb";
 
+
 let START_BLOCK = 0;
 
 if (process.env.START_BLOCK) {
@@ -42,4 +43,19 @@ export async function getBipPrice(): Promise<number> {
 
 export async function setBipPrice(value: number) {
     await rdb.set(rdb.buildKey("bipPrice"), value.toString());
+}
+
+export async function getCoinPrice(coin: string): Promise<number> {
+    const result = await rdb.get(rdb.buildKey("coinPrice", coin));
+
+    if (result) {
+        return parseFloat(result);
+    }
+
+    return -1;
+}
+
+export async function setCoinPrice(coin: string, price: number) {
+    console.log("setCoinPrice", coin, price);
+    await rdb.set(rdb.buildKey("coinPrice", coin), price.toString());
 }

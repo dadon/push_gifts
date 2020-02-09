@@ -13,6 +13,8 @@ const rpush = promisify(client.rpush).bind(client);
 const lrem = promisify(client.lrem).bind(client);
 const lrange = promisify(client.lrange).bind(client);
 const llen = promisify(client.llen).bind(client);
+const sadd = promisify(client.sadd).bind(client);
+const smembers = promisify(client.smembers).bind(client);
 
 const PREFIX = process.env.REDIS_PREFIX || "minterpush";
 
@@ -24,6 +26,8 @@ export default {
     rpush,
     lrange,
     lrem,
+    sadd,
+    smembers,
 
     buildKey(...keys: string[]): string {
         return [PREFIX, ...arguments].join(":");

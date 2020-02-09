@@ -2,9 +2,10 @@ import rdb from "./rdb";
 
 import { generateId } from "../utils";
 import { createWallet } from "./wallet";
-import { Campaign, CampaignRefill } from "../types";
+import { Campaign, CampaignRefill, CampaignStat, CampaignType } from "../types";
 import { getBipPrice, getCurrencyRate } from "./background";
 import * as minter from "../external_api/minter";
+import { createUserSingle } from "./user";
 
 
 export const CAMPAIGN_ID_LEN = 8;
@@ -16,14 +17,16 @@ const CAMPAIGN_PUBLIC_FIELDS = [
     "name",
     "brandName",
     "coinToBip",
+    "type",
 ];
 
-export async function createCampaign(): Promise<Campaign> {
+export async function createCampaign(uid: string, type?: CampaignType): Promise<Campaign> {
     const campaignId = generateId(CAMPAIGN_ID_LEN);
     const wallet = await createWallet();
 
     const campaign: Campaign = {
         campaignId: campaignId,
+        type: type || CampaignType.Mass,
         campaignPublicId: generateId(CAMPAIGN_ID_LEN),
         address: wallet.address,
         balance: 0,
@@ -31,11 +34,19 @@ export async function createCampaign(): Promise<Campaign> {
         created: Date.now(),
     };
 
+    if (campaign.type === CampaignType.Single) {
+        campaign.recipientId = await createUserSingle(campaignId);
+    }
+
     await updateCampaignUsdRate(campaign);
 
     await saveCampaign(campaign);
     await rdb.set(rdb.buildKey("campaignPublic", campaign.campaignPublicId), campaignId);
     await rdb.rpush(rdb.buildKey("campaigns"), campaignId);
+
+    if (uid) {
+        await rdb.sadd(rdb.buildKey("uidCampaigns", uid), campaignId);
+    }
 
     return campaign;
 }
@@ -45,21 +56,27 @@ export function getCampaign(campaignId: string): Promise<Campaign> {
     return rdb.getData(rdb.buildKey("campaign", campaignId));
 }
 
-export async function getCampaignPublic(campaignPublicId: string, localeData: object): Promise<object> {
+
+export async function getCampaignPublic(campaign: Campaign, localeData: object): Promise<object> {
+    const campaignClean = {};
+
+    for (let f of CAMPAIGN_PUBLIC_FIELDS) {
+        campaignClean[f] = campaign[f];
+    }
+
+    campaignClean["runOutOfGifts"] = campaign.balance < campaign.rewardPerUser;
+    campaignClean["active"] = campaign.balance > 0 && campaign.coin;
+
+    campaignClean["priceData"] = await calculateCoinPrice(campaign, localeData);
+
+    return campaignClean;
+}
+
+export async function getCampaignPublicById(campaignPublicId: string, localeData: object): Promise<object> {
     const campaign = await getCampaignByPublicId(campaignPublicId);
 
     if (campaign) {
-        const campaignClean = {};
-
-        for (let f of CAMPAIGN_PUBLIC_FIELDS) {
-            campaignClean[f] = campaign[f];
-        }
-
-        campaignClean["runOutOfGifts"] = campaign.balance < campaign.rewardPerUser * 2;
-
-        campaignClean["priceData"] = await calculateCoinPrice(campaign, localeData);
-
-        return campaignClean;
+        return await getCampaignPublic(campaign, localeData);
     }
 
     return null;
@@ -68,18 +85,25 @@ export async function getCampaignPublic(campaignPublicId: string, localeData: ob
 export async function updateCampaign(campaignId: string, campaignData: object) {
     const campaign = await getCampaign(campaignId);
 
-    const name = campaignData["name"];
-    if (name && name.length > 0) {
-        campaign.name = name;
-    }
-
-    const rewardPerUser = campaignData["rewardPerUser"];
-    if (rewardPerUser !== undefined) {
-        campaign.rewardPerUser = rewardPerUser;
+    console.log("campaignData", campaignData);
+    if (campaignData["name"]) {
+        campaign.name = campaignData["name"];
     }
 
     if (campaignData["brandName"]) {
         campaign.brandName = campaignData["brandName"];
+    }
+
+    if (campaignData["rewardPerUser"]) {
+        campaign.rewardPerUser = campaignData["rewardPerUser"];
+    }
+
+    if (campaignData["giftNum"]) {
+        campaign.giftNum = campaignData["giftNum"];
+    }
+
+    if (campaignData["password"]) {
+        campaign.password = campaignData["password"];
     }
 
     await updateCampaignUsdRate(campaign);
@@ -103,8 +127,40 @@ export async function getAllCampaigns(): Promise<Campaign[]> {
     return campaigns;
 }
 
+export async function getCampaignsByUID(uid: string): Promise<Campaign[]> {
+    let campaignIds = await rdb.smembers(rdb.buildKey("uidCampaigns", uid));
+    if (!campaignIds) return null;
+
+    const result = [];
+    for (let campaignId of campaignIds) {
+        const campaign = await getCampaign(campaignId);
+        result.push(campaign);
+    }
+
+    return result;
+}
+
+export async function calculateStat(campaigns: Campaign[]) {
+    for (let campaign of campaigns) {
+        const stat: CampaignStat = {
+            visitorNum: 0,
+            usersNum: 0,
+        };
+        let visitors = await rdb.smembers(rdb.buildKey("campaignVisitors", campaign.campaignPublicId));
+        if (visitors) {
+            stat.visitorNum = visitors.length;
+        }
+        const userIds = await rdb.getList(rdb.buildKey("campaignUsers", campaign.campaignId));
+        if (userIds) {
+            stat.usersNum = userIds.length;
+        }
+
+        campaign.stat = stat;
+    }
+}
+
 export async function checkRefillTx(txHash: string): Promise<Boolean> {
-    return
+    return;
 }
 
 export async function addRefillTx(campaign: Campaign, txHash: string, amount: number, coin: string, from: string): Promise<Boolean> {
@@ -140,6 +196,8 @@ export async function addRefillTx(campaign: Campaign, txHash: string, amount: nu
 }
 
 export function saveCampaign(campaign: Campaign) {
+    campaign.waitForRefill = checkWaitForRefill(campaign);
+    console.log("saveCampaign", campaign);
     return rdb.setData(rdb.buildKey("campaign", campaign.campaignId), campaign);
 }
 
@@ -183,4 +241,18 @@ export async function calculateCoinPrice(campaign: Campaign, localeData: object)
     }
 
     return result;
+}
+
+export async function addCampaignVisitor(campaignId: string, uid: string) {
+    return rdb.sadd(rdb.buildKey("campaignVisitors", campaignId), uid);
+}
+
+function checkWaitForRefill(campaign: Campaign): boolean {
+    if (campaign.type === CampaignType.Mass) {
+        if (campaign.rewardPerUser && campaign.giftNum) {
+            return campaign.balance < campaign.rewardPerUser * campaign.giftNum;
+        }
+    }
+
+    return false;
 }

@@ -1,12 +1,13 @@
 import rdb from "./rdb";
 import { generateId } from "../utils";
-import { getCampaign, getCampaignByPublicId, saveCampaign } from "./campaign";
-import { CoinConvertRecord, User, UserSpend } from "../types";
+import { getCampaign, getCampaignByPublicId, getCampaignPublic, saveCampaign } from "./campaign";
+import { CampaignType, CoinConvertRecord, User, UserSpend } from "../types";
 import { sendMail } from "../external_api/email";
-import { buyCoins, sellCoins, sendCoins, sdk } from "../external_api/minter";
+import { sdk, sellCoins, sendCoins } from "../external_api/minter";
 import { getWalletKey } from "./wallet";
 import { sendSms } from "../external_api/sms";
 import { addRecord } from "./coin_convert";
+import { getCoinPrice } from "./background";
 
 
 const USER_PUBLIC_FIELDS = [
@@ -16,7 +17,7 @@ const USER_PUBLIC_FIELDS = [
     "phone",
 ];
 
-const USER_ID_LEN = 16;
+const USER_ID_LEN = 8;
 
 export async function createUser(campaignPublicId: string, userInfo: any) {
     const campaign = await getCampaignByPublicId(campaignPublicId);
@@ -40,7 +41,7 @@ export async function createUser(campaignPublicId: string, userInfo: any) {
 
     let user: User = await getUser(userId);
 
-    console.log('createUser', user);
+    console.log("createUser", user);
 
     if (!user) {
         user = {
@@ -63,13 +64,17 @@ export async function createUser(campaignPublicId: string, userInfo: any) {
             await setUserIdByCredentials(campaign.campaignPublicId, userInfo.phone, userId);
         }
 
+        if (userInfo.uid) {
+            user.uid = userInfo.uid;
+        }
+
         await saveUser(user);
     }
 
     const privateUrl = `${process.env.SITE_URL}/c/${campaignPublicId}/${userId}`;
 
     if (userInfo.phone) {
-        console.log('userInfo.phone', userInfo.phone);
+        console.log("userInfo.phone", userInfo.phone);
         // TODO: validate phone
         const res = await sendSms(userInfo.phone, `Get your ${campaign.rewardPerUser} ${campaign.coin} - ${privateUrl}`);
         console.log(res);
@@ -82,7 +87,23 @@ export async function createUser(campaignPublicId: string, userInfo: any) {
     }
 }
 
-export async function getUser(userId: string) {
+export async function createUserSingle(campaignId: string): Promise<string> {
+    const userId = generateId(USER_ID_LEN);
+
+    const user: User = {
+        userId: userId,
+        campaignId: campaignId,
+        balance: 0,
+        created: Date.now(),
+        active: true,
+    };
+
+    await saveUser(user);
+
+    return userId;
+}
+
+export async function getUser(userId: string): Promise<User> {
     const user = await rdb.getData(rdb.buildKey("user", userId));
     if (!user) return null;
     await activateUser(user);
@@ -93,29 +114,61 @@ export async function getUserPublicFields(userId: string) {
     const user = await getUser(userId);
     if (user) {
         const userPublic = {};
+
+        if (user.campaignId) {
+            const campaign = await getCampaign(user.campaignId);
+
+            if (campaign.type === CampaignType.Single) {
+                user.balance = campaign.balance;
+            }
+
+            userPublic["campaign"] = await getCampaignPublic(campaign, user.userLocale);
+        }
+
         for (let f of USER_PUBLIC_FIELDS) {
             userPublic[f] = user[f];
         }
+
         return userPublic;
     }
+
     return null;
 }
 
 export async function spend(userId: string, type: string, toAddress: string, amount: number, payload?: string) {
     const user: User = await getUser(userId);
 
-    if (amount > user.balance) amount = user.balance;
-    if (user.balance <= 0) return false;
-
     const campaign = await getCampaign(user.campaignId);
 
     if (campaign.balance < amount) return false;
+
+    let balance = user.balance;
+
+    if (campaign.type === CampaignType.Single) {
+        balance = campaign.balance;
+    }
+
+    if (amount > balance) amount = balance;
+
+    if (balance <= 0) return false;
 
     let txHash = null;
 
     const walletKey = await getWalletKey(campaign.address);
 
+    let bipInCoin = 1;
+    if (campaign.coin !== process.env.CHAIN_COIN) {
+        const coinPrice = await getCoinPrice(campaign.coin);
+        if (coinPrice) bipInCoin = coinPrice;
+    }
+
     if (type === "bip2phone" && campaign.coin !== process.env.CHAIN_COIN) {
+        let fee = bipInCoin * 0.15;
+        if (payload) {
+            fee += bipInCoin * 0.015 * payload.length;
+        }
+
+        amount -= fee;
 
         txHash = await sellCoins(walletKey, {
             coinFrom: campaign.coin,
@@ -141,15 +194,19 @@ export async function spend(userId: string, type: string, toAddress: string, amo
             coinFrom: campaign.coin,
             convertHash: txHash,
             payload: payload,
-            amount: willGet
+            amount: willGet,
         };
 
         await addRecord(convertRec);
-
     } else {
+        let fee = bipInCoin * 0.015;
+        if (payload) {
+            fee += bipInCoin * 0.015 * payload.length;
+        }
+
         txHash = await sendCoins(walletKey, {
             to: toAddress,
-            amount: amount,
+            amount: amount - fee,
             coin: campaign.coin,
         }, campaign.coin, payload);
 
@@ -169,7 +226,10 @@ export async function spend(userId: string, type: string, toAddress: string, amo
     };
 
     campaign.balance -= amount;
-    user.balance -= amount;
+
+    if (campaign.type !== CampaignType.Single) {
+        user.balance -= amount;
+    }
 
     user.spendRecords.push(rec);
 

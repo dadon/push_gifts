@@ -1,6 +1,7 @@
 import * as exchange_rate from "../external_api/exchange_rate";
 import * as db from "../db/background";
 
+
 export async function updateBipPrice() {
     const bipPrice = await exchange_rate.getBipUsdPrice();
     if (bipPrice) {
@@ -11,7 +12,6 @@ export async function updateBipPrice() {
 export async function updateCurrencyRates() {
     const currencyRates = await exchange_rate.getCurrencyRates();
     if (currencyRates) {
-        console.log("currencyRates", currencyRates);
         await db.setCurrencyRate(currencyRates);
     }
 }

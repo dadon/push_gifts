@@ -1,6 +1,7 @@
-
-export const REQUEST_GET: string = "GET";
-export const REQUEST_POST: string = "POST";
+export enum CampaignType {
+    Single = "single",
+    Mass = "mass",
+}
 
 export interface Wallet {
     address: string;
@@ -9,29 +10,50 @@ export interface Wallet {
 
 export interface Campaign {
     campaignId: string;
-    campaignPublicId: string;
+    type: CampaignType;
+    address: string;
+    balance: number;
+    created: number;
+
+    coin?: string;
+    coinToBip?: number;
     name?: string;
     brandName?: string;
-    address: string;
-    coin?: string;
-    balance: number;
-    rewardPerUser: number;
+
+    // single only
+    password?: string;
+    recipientId?: string;
+
+    // mass only
+    campaignPublicId?: string;
+    rewardPerUser?: number;
     rewardPerUserUsd?: number;
-    coinToBip?: number;
-    created: number;
+    giftNum?: number;
     runOutOfGifts?: boolean;
+    waitForRefill?: boolean;
+    stat?: CampaignStat;
+}
+
+
+export interface CampaignStat {
+    visitorNum: number;
+    usersNum: number;
 }
 
 export interface User {
     userId: string;
     campaignId: string;
     balance: number;
-    email?: string;
-    phone?: string;
-    userLocale?: object;
-    navigator?: string[];
     created: number;
     active: boolean;
+
+    uid?: string;
+    email?: string;
+    phone?: string;
+
+    userLocale?: object;
+    navigator?: string[];
+
     spendRecords?: UserSpend[];
 }
 

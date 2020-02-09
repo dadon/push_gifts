@@ -1,16 +1,12 @@
 import { Request, Response } from "express";
+
 import * as db from "../db/user";
-import * as utils from "../utils";
-import { getCurrencyCodeByCountryCode } from "../utils/currency";
 import { getUserLocaleRequest } from "../utils";
 import { registerKeyWord, validatePhone } from "../external_api/biptophone";
 
 
-const geoip = require("geoip-country");
-
-
 export async function create(req: Request, res: Response) {
-    const { campaignPublicId, userInfo, navigator } = req.body;
+    const { campaignPublicId, userInfo, navigator, uid } = req.body;
 
     console.log("create", campaignPublicId, userInfo);
 
@@ -18,6 +14,7 @@ export async function create(req: Request, res: Response) {
 
     userInfo["userLocale"] = getUserLocaleRequest(req);
     userInfo["navigator"] = navigator;
+    userInfo["uid"] = uid;
 
     await db.createUser(campaignPublicId, userInfo);
 
@@ -30,10 +27,6 @@ export async function get(req: Request, res: Response) {
     const { userId } = req.params;
 
     const user = await db.getUserPublicFields(userId);
-    const country = geoip.lookup(utils.getIpFromRequest(req));
-    if (country) {
-        console.log("country=", country.country, getCurrencyCodeByCountryCode(country.country));
-    }
 
     res.json({
         success: true,

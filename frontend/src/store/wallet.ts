@@ -9,25 +9,6 @@ export const SpendTypes = [
     { "id": "Frame-2" },
     { "id": "Frame-3" },
     { "id": "Frame-4" },
-    { "id": "Frame-5" },
-    { "id": "Frame-6" },
-    { "id": "Frame-7" },
-    { "id": "Frame-8" },
-    { "id": "Frame-9" },
-    { "id": "Frame-10" },
-    { "id": "Frame-11" },
-    { "id": "Frame-12" },
-    { "id": "Frame-13" },
-    { "id": "Frame-14" },
-    { "id": "Frame-15" },
-    { "id": "Frame-16" },
-    { "id": "Frame-17" },
-    { "id": "Frame-18" },
-    { "id": "Frame-19" },
-    { "id": "Frame-20" },
-    { "id": "Frame-21" },
-    { "id": "Frame-22" },
-    { "id": "Frame-23" },
 ];
 
 export const Types = {
@@ -64,7 +45,10 @@ export const Actions = {
         const response = await api.get(`user/${userId}`);
         if (response.user) {
             context.commit(Types.currentUser, response.user);
-            console.log("response.user", response.user);
+
+            if (response.user.campaign) {
+                context.commit(Types.currentUserCampaign, response.user.campaign);
+            }
         }
         return response.user;
     },

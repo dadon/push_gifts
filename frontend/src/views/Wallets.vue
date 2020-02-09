@@ -1,6 +1,5 @@
 <template>
-    <div>
-        <sidebar/>
+    <admin-layout>
         <div class="campaign-admin-wrapper">
             <div class="container campaign-page">
                 <h2>Manage your wallets</h2>
@@ -8,18 +7,18 @@
 
             </div>
         </div>
-    </div>
+    </admin-layout>
 </template>
 
 <script>
     import ButtonAsync from "@/components/ButtonAsync";
-    import Sidebar from "@/components/Sidebar";
     import { Types } from "@/store/admin";
+    import AdminLayout from "@/layouts/AdminLayout";
 
     export default {
         components: {
+            AdminLayout,
             ButtonAsync,
-            Sidebar
         },
 
         methods: {

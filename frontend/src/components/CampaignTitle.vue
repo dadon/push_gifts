@@ -17,7 +17,7 @@
                 let name = this.campaign.name;
 
                 if (name) {
-                    return "for " + name;
+                    return name;
                 }
 
                 return this.campaign.campaignId;

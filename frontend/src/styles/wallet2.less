@@ -1,0 +1,656 @@
+@import "fonts";
+
+@mainColor: #3f4973;
+@fontColor: #fff;
+@background: linear-gradient(112deg, #3f4973 0%, rgba(57, 66, 104, 1.00) 100%);
+
+.noselect() {
+  user-select: none;
+}
+
+html, * {
+  font-family: "Calibri", serif;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: @mainColor;
+  color: @fontColor;
+}
+
+button:focus, input:focus, textarea:focus, select:focus {
+  outline: none;
+}
+
+input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input:not([type="button"]):not([type="submit"]):not([type="reset"]):focus, textarea:hover, textarea:focus, select:hover, select:focus {
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: none;
+}
+
+
+.content-block {
+  max-width: 368px;
+  margin: auto;
+
+  padding: 16px;
+
+  border-radius: 20px;
+  background: @mainColor;
+  box-shadow: 8px 8px 30px 0px rgba(36, 41, 66, 0.8), -8px -8px 30px 0px rgba(73, 85, 136, 0.8);
+  border: 1px solid rgba(123, 140, 219, 0.3);
+  border-bottom-width: 0;
+  border-right-width: 0;
+}
+
+.content-block label {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.content-block input {
+  display: block;
+  width: 97%;
+  height: 55px;
+  background-color: #2d334e;
+  border-radius: 8px;
+  border: 2px solid #2a304c;
+  color: @fontColor;
+  font-size: 18px;
+  margin-bottom: 8px;
+  transition: border-color 200ms;
+}
+
+.content-block input::placeholder {
+  color: #a6a6ac;
+}
+
+.content-block input:focus {
+  //outline: none !important;
+  //border: 1px solid @fontColor;
+  //box-shadow: none;
+}
+
+
+.content-actions {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.button, a.button {
+  height: 80px;
+
+  border-radius: 20px;
+
+  background: @mainColor;
+  box-shadow: 8px 8px 20px 0px rgba(36, 41, 66, 0.8), -8px -8px 20px 0px rgba(73, 85, 136, 0.8);
+  border: 1px solid rgba(123, 140, 219, 0.3);
+  border-bottom-width: 0;
+  border-right-width: 0;
+
+  text-shadow: 0px 0px 5px rgba(252, 247, 247, 0.25);
+  color: #f8f6f6;
+  font-size: 20px;
+  text-transform: uppercase;
+
+  transition: box-shadow 200ms;
+
+  .noselect();
+}
+
+.button:hover, a.button:hover {
+  background: @mainColor;
+  border: 1px solid rgba(123, 140, 219, 0.3);
+  border-bottom-width: 0;
+  border-right-width: 0;
+  //box-shadow: 8px 8px 20px 0px rgba(36, 41, 66, 0.8), -8px -8px 20px 0px rgba(145, 158, 241, 0.8);
+}
+
+.button:focus, a.button:focus, .button.active {
+  background: @mainColor;
+  border: 1px solid rgba(123, 140, 219, 0.3);
+  border-bottom-width: 0;
+  border-right-width: 0;
+}
+
+//.button:focus, .button:active, a.button:active, a.button:focus, .button.active {
+.button:active, a.button:active, .button.active {
+  background: @mainColor;
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.balance-block {
+  text-align: center;
+  margin: 20px auto;
+
+  .title {
+    font-size: 30px;
+  }
+
+  .balance {
+    font-size: 40px;
+    font-weight: bold;
+    text-shadow: 0px 0px 5px rgba(252, 247, 247, 0.25);
+  }
+
+  .balance-currency {
+    font-size: 20px;
+    color: #a6a6ac;
+    font-weight: bold;
+  }
+}
+
+.spend {
+
+  text-align: center;
+  max-width: 368px;
+  margin: 20px auto;
+
+  .title {
+    font-size: 20px;
+    color: #a6a6ac;
+    font-weight: bold;
+  }
+
+  .spend-card {
+    display: inline-block;
+    margin: 16px 0px;
+    width: 100%;
+    max-width: 368px;
+    height: 190px;
+
+    border-radius: 20px;
+    box-shadow: 8px 8px 20px 0px rgba(36, 41, 66, 0.8), -8px -8px 20px 0px rgba(73, 85, 136, 0.8);
+    border: 1px solid rgba(123, 140, 219, 0.3);
+    border-bottom-width: 0;
+    border-right-width: 0;
+    box-sizing: border-box;
+
+    transition: box-shadow 200ms;
+    .noselect();
+  }
+
+  .spend-card:hover, .spend-card:focus, .spend-card:active {
+    background: @background;
+    box-shadow: none;
+    border-color: transparent;
+  }
+}
+
+.admin-landing-block {
+  margin-top: 40px;
+}
+
+.admin-block {
+  width: 100%;
+  padding-bottom: 40px;
+}
+
+
+.admin-landing {
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+
+  h1, h2 {
+    text-transform: uppercase;
+    font-size: 28px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+}
+
+.create-campaign-btn {
+  width: 220px;
+  font-size: 18px;
+  display: block;
+  margin: 0px auto 20px;
+}
+
+.admin-input-row {
+  position: relative;
+  display: block;
+}
+
+.admin-input {
+  margin-bottom: 10px;
+
+  label {
+    display: block;
+    padding: 0;
+    //margin-bottom: 6px;
+    font-size: 20px;
+    //padding-left: 4px;
+  }
+
+  input {
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+    border-radius: 8px;
+    font-size: 20px;
+
+    height: 55px;
+    color: #4c4c52;
+    background-color: #d2dbe5;
+    border: 2px solid #ced6df;
+  }
+}
+
+.admin-input.inline {
+  float: left;
+  width: 40%;
+}
+
+.admin-input.inline + .admin-input.inline {
+  margin-left: 20%;
+}
+
+.campaign-admin {
+  max-width: 414px;
+  margin: auto;
+
+  h2 {
+    text-align: left;
+  }
+}
+
+@buyMargin: 50px;
+
+.buy-block {
+  text-align: center;
+  height: auto;
+  line-height: 114px;
+  width: 140 * 2 + @buyMargin;
+  margin: auto auto 30px;
+}
+
+.campaign-buy-btn.copy-address {
+  padding-left: 30px;
+}
+
+.campaign-buy-btn-wrapper {
+  width: 140px;
+  display: block;
+  float: left;
+}
+
+.campaign-buy-btn, a.campaign-buy-btn {
+  width: 140px;
+  height: 114px;
+
+  box-sizing: border-box;
+  display: block;
+  float: left;
+  margin: 0;
+
+  //padding: 0px;
+
+  .address-prefix-wrapper {
+    position: relative;
+  }
+
+  .address-prefix {
+    position: absolute;
+    left: -24px;
+    top: 0px;
+    //font-size: 26px;
+    font-weight: bold;
+    z-index: 1;
+  }
+}
+
+.campaign-buy-btn > .address-label {
+  font-family: monospace;
+  text-transform: none;
+}
+
+.campaign-buy-btn-wrapper + .campaign-buy-btn-wrapper {
+  margin-left: @buyMargin;
+}
+
+
+.address-input-hidden {
+  position: absolute;
+  display: block;
+  left: -9999px;
+}
+
+.copied-message-wrapper {
+  position: relative;
+}
+
+.copied-message {
+  position: absolute;
+  width: 140px;
+  height: 114px;
+  border-radius: 20px;
+  top: -10px;
+  left: -31px;
+  line-height: 114px;
+  //background-color: @mainColor;
+  font-weight: bold;
+  z-index: 2;
+  //transform-origin: 50% 50%;
+  //transform: scale(0);
+  transition: opacity 200ms ease-out;
+}
+
+.address-label {
+  transition: opacity 100ms;
+
+}
+
+.address-label > *, .address-prefix > *{
+  font-family: monospace;
+  text-transform: none;
+}
+
+.summary {
+  margin-bottom: 10px;
+  font-size: 30px;
+}
+
+.summary-label, .summary-value {
+  font-size: 30px;
+}
+
+.share-text, .share-link {
+  font-size: 20px;
+}
+
+.share-btn {
+  width: 100%;
+  padding: 0px;
+  margin: 20px auto;
+}
+
+.share-link {
+  font-weight: bold;
+
+  a {
+    color: white;
+  }
+}
+
+.campaign-admin-summary {
+  max-width: 94%;
+  margin: auto auto 0px;
+
+}
+
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 200ms;
+}
+
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+.login-btn {
+  font-size: 50px;
+  padding: 0px 20px;
+  height: auto;
+  //line-height: 50px;
+  //height: 40px;
+}
+
+.spend .no-active {
+  filter: grayscale(100%);
+  box-shadow: none;
+}
+
+.spend-success-message {
+  padding: 16px;
+  font-size: 25px;
+  text-align: center;
+}
+
+.tabs {
+  max-width: 414px;
+  margin: auto;
+  text-align: center;
+}
+
+.btn-tab {
+  font-size: 50px;
+  height: auto;
+}
+
+.btn-tab + .btn-tab {
+  margin-left: 30px;
+}
+
+.back-btn {
+  position: relative;
+  font-size: 30px;
+  width: 120px;
+  height: 60px;
+  padding: 5px;
+  margin: 10px 0 20px;
+
+  i {
+    position: absolute;
+    top: 10px;
+    left: 4px;
+  }
+
+  span {
+    position: absolute;
+    top: 5px;
+    left: 38px;
+  }
+}
+
+.tip {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.runout-of-gifts {
+  padding: 100px 20px;
+  font-size: 30px;
+  text-align: center;
+}
+
+.instant-send-btn {
+  font-size: 30px;
+  height: auto;
+  padding: 10px 20px;
+}
+
+.tab-tip {
+  text-align: left;
+  font-weight: bold;
+  font-size: 20px;
+  margin-top: 40px;
+}
+
+.bipto img {
+  padding-top: 16px;
+}
+
+.spend-title {
+  font-size: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.spend-error-message {
+  font-size: 20px;
+  font-weight: bold;
+  padding-left: 10px;
+  color: #FF4F4F;
+  text-align: left;
+}
+
+.push-wallet-link {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 16px;
+}
+
+.push-wallet-link, .sharings-stat-head {
+  .table {
+    display: table;
+    width: 100%;
+    font-size: 20px;
+  }
+
+  .tr {
+    display: table-row;
+  }
+
+  .td {
+    display: table-cell;
+    width: 20%;
+  }
+  .td-big {
+    display: table-cell;
+    width: 30%;
+  }
+  .td-middle {
+    display: table-cell;
+    width: 40%;
+  }
+
+}
+
+.sharings-stat-head {
+  width: 100%;
+  margin-bottom: 10px;
+
+  .td {
+    //padding: 4px;
+    font-size: 15px;
+    font-weight: bold;
+
+    //border-top: none;
+    //border-bottom: none;
+  }
+
+  .td + .td {
+    border-left: 2px solid #999999;
+  }
+
+  .sep {
+    display: inline-block;
+    width: 2px;
+    height: 10px;
+    background-color: #999999;
+  }
+}
+
+a.open-wallet {
+  padding-top: 23px;
+}
+
+.campaign-admin-desktop-share {
+  margin: 20px auto 30px;
+  max-width: 692px;
+  text-align: center;
+
+  .share-text, .share-link {
+    font-size: 30px;
+  }
+}
+
+.sms-share {
+  max-width: 250 + 150px;
+  text-align: center;
+  margin: 30px auto 0px;
+}
+
+.sms-input-block {
+  width: 250px;
+  float: left;
+}
+
+.sms-send {
+  display: block;
+  width: 140px;
+  height: 70px;
+  float: left;
+  margin: -8px 0 0 10px;
+}
+
+.share-desktop-btns {
+  width: 150px * 3 + 24 * 2;
+  margin: auto;
+  //float: left;
+}
+
+.share-desktop-btn {
+  width: 150px;
+  height: 78px;
+}
+
+a.share-desktop-qr {
+  position: relative;
+  //display: block;
+  //float: left;
+  margin: 10px 0px 0px 8px;
+  padding: 0;
+  width: 170px * 1.5;
+  height: 170px * 1.5;
+}
+
+img.qr-code {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  border-radius: 20px;
+  display: block;
+  width: 170px *  1.5;
+  height: 170px *  1.5;
+}
+
+.landing-wrapper {
+
+}
+
+img.landing {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+
+  //height: 590px;
+}
+
+@media screen and (min-width: 600px) {
+  .summary {
+    text-align: center;
+  }
+
+  .create-campaign-btn {
+    width: 220px;
+    font-size: 18px;
+    display: inline-block;
+    margin: 0px 20px;
+    //margin: 0px auto 20px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .campaign-buy-btn-wrapper + .campaign-buy-btn-wrapper {
+    margin-left: 10px;
+  }
+
+
+  .buy-block {
+    text-align: center;
+    //height: 114px;
+    //line-height: 114px;
+    width: 140 * 2px + 10px;
+    margin: auto auto 30px;
+  }
+
+  .btn-tab {
+    font-size: 40px;
+  }
+}

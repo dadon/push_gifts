@@ -19,6 +19,7 @@ export interface Campaign {
     rewardPerUserUsd?: number;
     coinToBip?: number;
     created: number;
+    runOutOfGifts?: boolean;
 }
 
 export interface User {

@@ -7,17 +7,21 @@ export const Types = {
     currentCampaign: "currentCampaign",
     currentCampaignUsers: "currentCampaignUsers",
     refillMode: "refillMode",
+    campaigns: "campaigns",
 
     createCampaign: "createCampaign",
     loadCampaign: "loadCampaign",
     saveCampaign: "saveCampaign",
     showRefill: "showRefill",
+    loadCampaigns: "loadCampaigns",
+    sendSms: "sendSms",
 };
 
 export const Props = {
     [Types.currentCampaign]: null,
     [Types.currentCampaignUsers]: null,
     [Types.refillMode]: false,
+    [Types.campaigns]: null,
 };
 
 export const Mutations = {
@@ -25,16 +29,17 @@ export const Mutations = {
         Types.currentCampaign,
         Types.currentCampaignUsers,
         Types.refillMode,
+        Types.campaigns,
     ]),
 };
 
 export const Actions = {
-    async [Types.createCampaign](context: any) {
-        const response = await api.post("campaign/create", {});
+    async [Types.createCampaign](context: any, type: string) {
+        const response = await api.post("campaign/create", { type });
+
         if (response.success) {
             context.commit(Types.currentCampaign, response.campaign);
-
-            router.push("/campaign/" + response.campaign.campaignId);
+            router.push(`/create/${type}/${response.campaign.campaignId}`);
         }
     },
 
@@ -51,6 +56,14 @@ export const Actions = {
         console.log("Types.saveCampaign", Types.saveCampaign);
         const response = await api.post(`campaign/${options.campaignId}`, options.data);
         await context.dispatch(Types.loadCampaign, options.campaignId);
+    },
+
+    async [Types.loadCampaigns](context: any) {
+        const response = await api.get("campaigns");
+
+        if (response.campaigns && response.campaigns.length) {
+            context.commit(Types.campaigns, response.campaigns);
+        }
     },
 
     [Types.showRefill](context: any, value: boolean) {

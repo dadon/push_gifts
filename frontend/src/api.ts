@@ -1,9 +1,17 @@
 import axios from "axios";
+import { getUserId } from "@/utils/user_id";
 
 
 export async function get(endpoint: string): Promise<any> {
     const url = `${process.env.VUE_APP_API}/${endpoint}`;
-    const response = await axios.get(url);
+
+    const userId = getUserId();
+
+    const response = await axios.get(url, {
+        params: {
+            uid: userId,
+        },
+    });
 
     if (response.status === 200) {
         return response.data;
@@ -15,6 +23,7 @@ export async function get(endpoint: string): Promise<any> {
 export async function post(endpoint: string, data: any): Promise<any> {
     const url = `${process.env.VUE_APP_API}/${endpoint}`;
 
+    data["uid"] = getUserId();
     data["navigator"] = [
         navigator.platform,
         navigator.userAgent,
@@ -30,3 +39,4 @@ export async function post(endpoint: string, data: any): Promise<any> {
 
     return null;
 }
+

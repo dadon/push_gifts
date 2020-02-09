@@ -1,5 +1,6 @@
 <template>
     <div class="content-block">
+        <div class="spend-title big" v-if="!spendType.title">Not available yet</div>
         <div class="spend-title" v-if="!spendType.title">Waiting for integration with bitrefill.com</div>
         <div class="spend-success-message" v-if="successMessage">{{ successMessage }}</div>
 
@@ -20,11 +21,15 @@
 
             <div class="spend-error-message" v-if="errorMessage">{{ errorMessage }}</div>
 
+
+
             <div style="text-align: center">
-            <ButtonAsync :label="spendType.action" :handler="spend" style-name="instant-send-btn"></ButtonAsync>
-            <button class="instant-send-btn cancel" @click="spendBack" v-if="spendType.id !== 'send'">cancel</button>
+                <ButtonAsync :label="spendType.action" :handler="spend" style-name="instant-send-btn"></ButtonAsync>
             </div>
         </section>
+        <div style="text-align: center">
+            <button class="button instant-send-btn" @click="spendBack" v-if="successMessage || !spendType.title">ok</button>
+        </div>
     </div>
 </template>
 
@@ -153,7 +158,7 @@
                 if (success) {
                     this.successMessage = "Success.";
                 } else {
-                    this.successMessage = "Error. Please try again later.";
+                    this.errorMessage = "Error. Please try again later.";
                 }
 
 

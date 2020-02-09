@@ -3,7 +3,8 @@ import VueRouter from "vue-router";
 
 import Home from "../views/Wallets.vue";
 import AdminLanding from "../views/AdminLanding.vue";
-import CampaignAdmin from "../views/CampaignAdmin.vue";
+import CreateMassWallet from "../views/CreateMassWallet.vue";
+import CreateSingleWallet from "../views/CreateSingleWallet.vue";
 import CampaignSignUp from "../views/CampaignSignUp.vue";
 import UserWallet from "../views/UserWallet.vue";
 import Wallets from "@/views/Wallets.vue";
@@ -30,17 +31,22 @@ const routes = [
     },
 
     {
-        path: "/campaign/:campaignId",
-        component: CampaignAdmin,
+        path: "/create/mass/:campaignId",
+        component: CreateMassWallet,
     },
 
     {
-        path: "/c/:campaignPublicId",
+        path: "/create/single/:campaignId",
+        component: CreateSingleWallet,
+    },
+
+    {
+        path: "/c-:campaignPublicId",
         component: CampaignSignUp,
     },
 
     {
-        path: "/c/:campaignPublicId/:userId",
+        path: "/w-:userId",
         component: UserWallet,
     },
 ];

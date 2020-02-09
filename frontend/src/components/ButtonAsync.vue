@@ -1,8 +1,8 @@
 <template>
-  <button class="btn" v-bind:class="styleName" @click="click">
+  <button class="button" v-bind:class="styleName" @click="click">
     <span v-if="loading">Loading...</span>
     <span v-if="!loading">{{ label }}</span>
-  </button class="btn">
+  </button>
 </template>
 
 <script>

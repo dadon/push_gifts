@@ -55,6 +55,8 @@ export async function getCampaignPublic(campaignPublicId: string, localeData: ob
             campaignClean[f] = campaign[f];
         }
 
+        campaignClean["runOutOfGifts"] = campaign.balance < campaign.rewardPerUser * 2;
+
         campaignClean["priceData"] = await calculateCoinPrice(campaign, localeData);
 
         return campaignClean;

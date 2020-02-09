@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-sm-12">
             <h2>Users list</h2>
-            <table>
+            <table class="users-list">
                 <thead>
                 <tr>
                     <th>created</th>
@@ -50,3 +50,10 @@
         },
     };
 </script>
+
+<style scoped>
+    table.users-list {
+        height: auto;
+        max-height: 1200px;
+    }
+</style>

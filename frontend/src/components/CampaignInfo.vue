@@ -12,11 +12,11 @@
 
                     <div class="campaign-label">
                         <span>Your name: </span>
-                        <input type="text" v-model="brandName" class="campaign-inline-input">
+                        <input type="text" v-model="brandName" class="campaign-inline-input brand-name">
                     </div>
 
                     <div class="campaign-label">
-                        <span>Campaign balance: {{ campaign.balance }} {{ campaign.coin }}</span>
+                        <span>Sharing balance: {{ campaign.balance }} {{ campaign.coin }}</span>
                         <button class="small add" @click="showRefill">add</button>
                     </div>
 
@@ -33,7 +33,7 @@
                 <div class="link-parent">
                     <div class="campaign-label">
                         <span>Link: </span>
-                        <a class="campaign-link" :href="link">{{ link }}</a>
+                        <a class="campaign-link" target="_blank" :href="link">{{ link }}</a>
                     </div>
 
                     <img class="qr" v-bind:src="qrcode"/>

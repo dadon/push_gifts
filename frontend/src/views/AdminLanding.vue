@@ -1,34 +1,134 @@
 <template>
-    <div>
-        <sidebar/>
-        <div class="campaign-admin-wrapper">
-            <div class="container campaign-page landing">
-                <p class="admin-text">Create new sharing to send gifts to any number of people</p>
-                <p class="admin-text">Gifts - are the loyalty points or virtual currency, based on <a href="https://www.minter.network" rel="noopener" target="_blank">Minter network</a> coins</p>
-                <ButtonAsync label="Create New Sharing" :handler="createCampaignClick" style-name="create-campaign-btn"/>
-                <p class="admin-text">Gifts are liquid and can be instantly spent</p>
-                <p class="admin-text">Recipients don't need to download any apps, they can use the points directly in the web push wallet.</p>
-                <p class="admin-text">To purchase Minter coins visit: <a href="https://bip.dev/card" rel="noopener" target="_blank">https://bip.dev/card</a></p>
+    <admin-layout>
+        <div class=" admin-landing">
+
+            <img class="landing" src="../assets/landing_top.png"/>
+
+        </div>
+
+        <div class="row admin-landing">
+            <div class="admin-block">
+                <h1>Create push wallet</h1>
+
+                <ButtonAsync label="For a friend" :handler="createCampaignSingle" style-name="create-campaign-btn"/>
+                <ButtonAsync label="For mass sharing" :handler="createCampaignMass" style-name="create-campaign-btn"/>
             </div>
         </div>
-    </div>
+
+        <div class="row admin-landing admin-landing-block" v-if="campaignsSingle && campaignsSingle.length">
+            <div class="admin-block">
+                <h2>My push wallets</h2>
+
+                <button class="button push-wallet-link" v-for="el in campaignsSingle" @click="openCampaign(el)">{{
+                    el.campaignId }}
+                </button>
+            </div>
+        </div>
+
+        <div class="row admin-landing admin-landing-block" v-if="campaignsMass && campaignsMass.length">
+            <div class="admin-block">
+                <h2>My mass sharings</h2>
+
+                <div class="sharings-stat-head">
+                    <div class="table">
+                        <div class="tr">
+                            <div class="td-big"></div>
+                            <div class="td">Gifts<br>left</div>
+                            <div class="td">People<br>scanned</div>
+                            <div class="td">Conversion<br>rate</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="button push-wallet-link" v-for="el in campaignsMass" @click="openCampaign(el)">
+                    <div class="table">
+                        <div class="tr">
+                            <div class="td-big">{{ name(el) }}</div>
+                            <div class="td">{{ giftsLeft(el) }}</div>
+                            <div class="td">{{ el.stat.visitorNum }}</div>
+                            <div class="td">{{ conversion(el) }}%</div>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </admin-layout>
 </template>
 
 <script>
-    import ButtonAsync from "@/components/ButtonAsync";
-    import Sidebar from "@/components/Sidebar";
     import { Types } from "@/store/admin";
+    import ButtonAsync from "@/components/ButtonAsync";
+    import AdminLayout from "@/layouts/AdminLayout";
+    import router from "@/router";
 
     export default {
         components: {
+            AdminLayout,
             ButtonAsync,
-            Sidebar,
+        },
+
+        computed: {
+            campaigns() {
+                return this.$store.state[Types.campaigns];
+            },
+
+            campaignsSingle() {
+                if (this.campaigns && this.campaigns.length) {
+                    return this.campaigns.filter(el => el.type === "single").sort((a, b) => b.balance - a.balance);
+                }
+
+                return null;
+            },
+
+            campaignsMass() {
+                if (this.campaigns && this.campaigns.length) {
+                    return this.campaigns.filter(el => el.type === "mass").sort((a, b) => b.balance - a.balance);
+                }
+
+                return null;
+            },
         },
 
         methods: {
-            async createCampaignClick() {
-                return this.$store.dispatch(Types.createCampaign);
+            async createCampaignSingle() {
+                return this.createCampaign("single");
             },
+
+            async createCampaignMass() {
+                return this.createCampaign("mass");
+            },
+
+            async createCampaign(type) {
+                return this.$store.dispatch(Types.createCampaign, type);
+            },
+
+            async openCampaign(campaign) {
+                router.push(`/create/${campaign.type}/${campaign.campaignId}`);
+            },
+
+            name(campaign) {
+                if (campaign.name) return campaign.name;
+                return campaign.campaignId;
+            },
+
+            giftsLeft(campaign) {
+                if (campaign && campaign.rewardPerUser && campaign.balance) {
+                    return Math.floor(campaign.balance / campaign.rewardPerUser);
+                }
+
+                return 0;
+            },
+
+            conversion(campaign) {
+                if (campaign && campaign.stat && campaign.stat.visitorNum) {
+                    return Math.round(campaign.stat.usersNum / campaign.stat.visitorNum * 100);
+                }
+                return 0;
+            },
+        },
+
+        mounted() {
+            this.$store.dispatch(Types.loadCampaigns);
         },
     };
 </script>

@@ -8,9 +8,13 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "buefy": "^0.8.10",
     "core-js": "^3.4.4",
     "date-fns": "^2.9.0",
+    "fastclick": "^1.0.6",
+    "fingerprintjs2": "^2.1.0",
     "mini.css": "^3.0.1",
+    "minter-js-sdk": "^0.28.0",
     "nanoid": "^2.1.10",
     "qrcode": "^1.4.4",
     "vue": "^2.6.10",

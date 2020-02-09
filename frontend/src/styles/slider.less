@@ -1,5 +1,5 @@
 
-@color: #13c841;
+@color: #ffffff;
 @size: 40px;
 
 .slider-wrapper {
@@ -9,7 +9,7 @@
   padding: 0px;
 }
 
-.slider {
+.slider, .content-block .slider {
   -webkit-appearance: none;
   display: block;
   width: 90%;
@@ -17,17 +17,18 @@
   background: @color;
   border-radius: 4px;
   outline: none;
+  border: none;
   opacity: 1;
   -webkit-transition: .2s;
   transition: opacity .2s;
   margin: 36px auto;
 }
 
-.slider:hover {
+.slider:hover, .content-block .slider:hover {
   opacity: 1;
 }
 
-.slider::-webkit-slider-thumb {
+.slider::-webkit-slider-thumb, .content-block .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: @size;
@@ -37,7 +38,7 @@
   cursor: pointer;
 }
 
-.slider::-moz-range-thumb {
+.slider::-moz-range-thumb, .content-block .slider::-moz-range-thumb {
   width: @size;
   height: @size;
   background: @color;

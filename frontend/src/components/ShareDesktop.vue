@@ -137,7 +137,7 @@
             },
 
             async sendSms() {
-                let message = `Here is a push wallet for you: ${this.url}`;
+                let message = `Here is a push wallet for you:\n${this.url}\nIt's a universal web gift card, that you can spend on mobile refills or digital gift cards`;
 
                 const response = await api.post("campaign/sms", {
                     phone: this.phone,

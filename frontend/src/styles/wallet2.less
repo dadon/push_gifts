@@ -28,6 +28,30 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
   box-shadow: none;
 }
 
+@footerHeight: 100px;
+
+.page-container {
+  position: relative;
+  min-height: 100vh;
+}
+
+.content-wrap {
+  padding-bottom: @footerHeight * 1.5;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.footer {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  bottom: 0;
+  width: 100%;
+  height: @footerHeight;
+  background-color: @mainColor;
+  border: none;
+  text-align: center;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
 
 .content-block {
   max-width: 368px;
@@ -180,6 +204,7 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 
 .admin-landing-block {
   margin-top: 40px;
+  padding: 10px;
 }
 
 .admin-block {
@@ -199,6 +224,8 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
     font-size: 28px;
     padding-top: 20px;
     padding-bottom: 20px;
+
+    .noselect();
   }
 }
 
@@ -254,6 +281,8 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 
   h2 {
     text-align: left;
+
+    .noselect();
   }
 }
 
@@ -329,17 +358,19 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
   border-radius: 20px;
   top: -10px;
   left: -31px;
-  line-height: 114px;
+  //line-height: 114px / 3;
+  //background-color: @mainColor;
   //background-color: @mainColor;
   font-weight: bold;
   z-index: 2;
   //transform-origin: 50% 50%;
   //transform: scale(0);
-  transition: opacity 200ms ease-out;
+  transition: opacity 200ms;
+  padding-top: 30px;
 }
 
 .address-label {
-  transition: opacity 100ms;
+  transition: opacity 200ms;
 
 }
 
@@ -355,6 +386,10 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 
 .summary-label, .summary-value {
   font-size: 30px;
+}
+
+.share-text {
+  .noselect();
 }
 
 .share-text, .share-link {
@@ -421,7 +456,7 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 }
 
 .btn-tab + .btn-tab {
-  margin-left: 30px;
+  margin-left: 20px;
 }
 
 .back-btn {
@@ -448,6 +483,7 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 .tip {
   font-size: 20px;
   margin-bottom: 8px;
+  .noselect();
 }
 
 .runout-of-gifts {
@@ -619,7 +655,39 @@ img.landing {
   height: auto;
   max-width: 100%;
 
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+
   //height: 590px;
+}
+
+.github-link-wrapper {
+  width: 60px;
+  height: 60px;
+  margin: 20px auto;
+  background-color: transparent;
+}
+
+.github-link {
+  width: 60px;
+  height: 60px;
+  background-color: transparent;
+  opacity: 0.3;
+  transition: opacity 0.2s;
+}
+
+.github-link:hover {
+  opacity: 1;
+}
+
+.github-link img {
+  width: 100%;
+  height: auto;
+  background-color: transparent;
 }
 
 @media screen and (min-width: 600px) {
@@ -652,5 +720,9 @@ img.landing {
 
   .btn-tab {
     font-size: 40px;
+  }
+
+  .btn-tab + .btn-tab {
+    margin-left: 10px;
   }
 }

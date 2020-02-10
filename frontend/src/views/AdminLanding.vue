@@ -1,6 +1,6 @@
 <template>
     <admin-layout>
-        <div class=" admin-landing">
+        <div class="admin-landing">
 
             <img class="landing" src="../assets/landing_top.png"/>
 
@@ -19,8 +19,7 @@
             <div class="admin-block">
                 <h2>My push wallets</h2>
 
-                <button class="button push-wallet-link" v-for="el in campaignsSingle" @click="openCampaign(el)">{{
-                    el.campaignId }}
+                <button class="button push-wallet-link" v-for="el in campaignsSingle" @click="openCampaign(el)">{{ pushWalletLabel(el) }}
                 </button>
             </div>
         </div>
@@ -123,8 +122,25 @@
                 if (campaign && campaign.stat && campaign.stat.visitorNum) {
                     return Math.round(campaign.stat.usersNum / campaign.stat.visitorNum * 100);
                 }
+
                 return 0;
             },
+
+            pushWalletLabel(campaign) {
+                let result = [];
+                if (campaign.name) {
+                    result.push("to " + campaign.name);
+                }
+                if (campaign.balance) {
+                    result.push(`${campaign.balance} ${campaign.coin}`);
+                }
+
+                if (!result.length) {
+                    result.push(campaign.campaignId);
+                }
+
+                return result.join(" - ");
+            }
         },
 
         mounted() {

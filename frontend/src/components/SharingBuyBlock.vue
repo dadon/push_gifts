@@ -3,8 +3,8 @@
         <div class="campaign-buy-btn-wrapper">
             <div class="tip">1. Tap to copy</div>
             <button class="button campaign-buy-btn copy-address" @click="copyAddress">
-                <div class="copied-message-wrapper" :style="{ opacity: copiedMessage ? 1 : 0}">
-                    <div class="copied-message">copied</div>
+                <div class="copied-message-wrapper" >
+                    <div class="copied-message" :style="{ opacity: copiedMessage ? 1 : 0}">copied to clipboard</div>
                 </div>
                 <div class="address-label" :style="{ opacity: hideAddress ? 0 : 1}">
                     <div class="address-prefix-wrapper">
@@ -70,10 +70,11 @@
 
         methods: {
             async copyAddress() {
+                if (this.hideAddress) return;
                 const result = selectAllAndCopy(this.$refs.addressInput);
                 if (!result) return;
                 this.hideAddress = true;
-                await sleep(100);
+                await sleep(200);
                 this.copiedMessage = true;
                 await sleep(1000);
                 this.copiedMessage = false;

@@ -71,12 +71,12 @@ export async function createUser(campaignPublicId: string, userInfo: any) {
         await saveUser(user);
     }
 
-    const privateUrl = `${process.env.SITE_URL}/c/${campaignPublicId}/${userId}`;
+    const privateUrl = `${process.env.SITE_URL}/w-${userId}`;
 
     if (userInfo.phone) {
         console.log("userInfo.phone", userInfo.phone);
         // TODO: validate phone
-        const res = await sendSms(userInfo.phone, `Get your ${campaign.rewardPerUser} ${campaign.coin} - ${privateUrl}`);
+        const res = await sendSms(userInfo.phone, `Here is a push wallet for you:\n${privateUrl}\nIt's a universal web gift card, that you can spend on mobile refills or digital gift cards`);
         console.log(res);
     } else if (userInfo.email) {
         // TODO: validate email

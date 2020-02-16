@@ -14,6 +14,7 @@ export const SpendTypes = [
 export const Types = {
     currentUser: "currentUser",
     currentUserCampaign: "currentUserCampaign",
+    walletPassword: "walletPassword",
 
     createUser: "createUser",
     loadUser: "loadUser",
@@ -26,51 +27,56 @@ export const Types = {
 export const Props = {
     [Types.currentUser]: null,
     [Types.currentUserCampaign]: null,
+    [Types.walletPassword]: null,
 };
 
 export const Mutations = {
     ...generateMutations([
         Types.currentUser,
         Types.currentUserCampaign,
+        Types.walletPassword,
     ]),
 };
 
 export const Actions = {
     async [Types.createUser](context: any, data: object) {
-        const response = await api.post("user/create", data);
+        const response = await api.post("wallet", data);
         return response.success;
     },
 
     async [Types.loadUser](context: any, userId: string) {
-        const response = await api.get(`user/${userId}`);
-        if (response.user) {
-            context.commit(Types.currentUser, response.user);
+        const user = await api.get(`wallet/${userId}`);
+        if (user) {
+            context.commit(Types.currentUser, user);
 
-            if (response.user.campaign) {
-                context.commit(Types.currentUserCampaign, response.user.campaign);
+            if (user.campaign) {
+                context.commit(Types.currentUserCampaign, user.campaign);
             }
         }
-        return response.user;
+
+        return user;
     },
 
     async [Types.loadPublicCampaign](context: any, campaignPublicId: string) {
-        const response = await api.get(`campaign-public/${campaignPublicId}`);
-        if (response.campaign) {
-            context.commit(Types.currentUserCampaign, response.campaign);
+        const campaign = await api.get(`campaign-public/${campaignPublicId}`);
+        if (campaign) {
+            context.commit(Types.currentUserCampaign, campaign);
         }
     },
 
     async [Types.spend](context: any, options: any) {
-        const userId = context.state[Types.currentUser].userId;
-        const response = await api.post(`user/${userId}/spend`, options);
-        if (response.user) {
-            context.commit(Types.currentUser, response.user);
+        const userId = context.state[Types.currentUser].walletId;
+        const response = await api.post(`wallet/${userId}/spend`, options);
+
+        if (response.success) {
+            await context.dispatch(Types.loadUser, userId);
         }
+
         return response.success;
     },
 
     async [Types.checkPhone](context: any, phone: String) {
-        const response = await api.post(`user/check-phone`, phone);
+        const response = await api.post(`misc/register-phone`, phone);
         return response;
     },
 };

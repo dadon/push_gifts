@@ -1,11 +1,13 @@
 <template>
-    <section>
+    <div class="share-block">
         <div class="row" v-if="isMobile">
             <div class="col-sm-12 campaign-admin-summary">
                 <div class="share-text" v-if="!single">Push wallet for mass sharing:</div>
                 <div class="share-text" v-if="single">Here is the push wallet for your friend:</div>
                 <div class="share-link"><a :href="url" target="_blank">{{ url }}</a></div>
-                <button class="button share-btn" @click="share">Share push wallet with {{ giftSize }} {{ giftCoin }}</button>
+                <button class="button share-btn" @click="share">Share push wallet <br> with {{ giftSize }} {{ giftCoin
+                    }}
+                </button>
             </div>
         </div>
 
@@ -13,26 +15,25 @@
             <div class="col-sm-12 campaign-admin-desktop-share">
                 <div class="share-text">Share push wallet with {{ giftSize }} {{ giftCoin }}</div>
                 <div class="share-link"><a :href="url" target="_blank">{{ url }}</a></div>
-                <a class="button share-desktop-qr" :href="QRcode" download="qr.png" v-if="QRcode">
-                    <img class="qr-code" v-bind:src="QRcode" v-if="QRcode" />
-                </a>
                 <div class="share-desktop-btns">
-                    <button class="button share-desktop-btn" @click="shareTg">telegram</button>
-                    <button class="button share-desktop-btn" @click="shareTwitter">twitter</button>
-                    <button class="button share-desktop-btn" @click="shareFb">fb</button>
+                    <button class="button share-desktop-btn" @click="shareTg"><img class="social" src="../assets/logo/tg_dark.svg"></button>
+                    <button class="button share-desktop-btn" @click="shareTwitter"><img class="social" src="../assets/logo/twitter_dark.svg"></button>
+                    <button class="button share-desktop-btn" @click="shareFb"><img class="social" src="../assets/logo/fb_dark.svg"></button>
                     <button class="button share-desktop-btn" @click="shareMail">email</button>
-                    <button class="button share-desktop-btn" @click="shareSms" :class="{ active: smsActive }">sms</button>
+                    <button class="button share-desktop-btn" @click="shareSms" :class="{ active: smsActive }">sms
+                    </button>
                     <button class="button share-desktop-btn" @click="shareCopy">copy</button>
                 </div>
 
                 <div class="sms-share" v-if="smsActive">
                     <div class="sms-input-block">
-                    <div class="admin-input">
-                        <input type="text" placeholder="enter phone number +7... " v-model="phone"/>
-                    </div>
+                        <div class="admin-input">
+                            <input type="text" placeholder="enter phone  +38... " v-model="phone"/>
+                        </div>
                     </div>
                     <button-async style-name="sms-send" :handler="sendSms" label="send"></button-async>
                 </div>
+
 
 
                 <input ref="urlInput" type="text" class="address-input-hidden" v-bind:value="url" readonly/>
@@ -40,7 +41,18 @@
                 <span class="toast" v-if="copiedMessage">Link copied into clipboard</span>
             </div>
         </div>
-    </section>
+
+        <div class="row" v-if="!isMobile">
+            <div class="col-sm-12 campaign-admin-desktop-share">
+                <div class="qr-wrapper">
+                    <div class="tip">tap on QR to download image</div>
+                    <a class="button share-desktop-qr" :href="QRcode" download="qr.png" v-if="QRcode">
+                        <img class="qr-code" v-bind:src="QRcode" v-if="QRcode"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -53,11 +65,11 @@
 
     export default {
         components: {
-            ButtonAsync
+            ButtonAsync,
         },
 
         props: {
-            giftSize: Number,
+            giftSize: String,
             giftCoin: String,
             url: String,
             single: Boolean,
@@ -70,7 +82,7 @@
                 isMobile: isMobile(),
                 smsActive: false,
                 phone: null,
-            }
+            };
         },
 
         methods: {
@@ -148,11 +160,13 @@
             },
         },
 
+        computed: {},
+
         async mounted() {
             this.QRcode = await QRCode.toDataURL(this.url, {
                 width: 200,
-                height: 200
+                height: 200,
             });
-        }
+        },
     };
 </script>

@@ -1,8 +1,46 @@
 @import "fonts";
 
-@mainColor: #3f4973;
-@fontColor: #fff;
-@background: linear-gradient(112deg, #3f4973 0%, rgba(57, 66, 104, 1.00) 100%);
+//@mainColor: #3f4973;
+//@fontColor: #fff;
+//@boxShadow: 8px 8px 30px 0px rgba(36, 41, 66, 0.8), -8px -8px 30px 0px rgba(73, 85, 136, 0.8);
+//@textShadow: 0px 0px 5px rgba(252, 247, 247, 0.25);
+//@textShadowHover: 0px 0px 5px rgba(252, 247, 247, 0.8);
+//@inputBg: #d2dbe55;
+//@inputBorder: 2px solid #ced6df;
+//@buttonBorder: 1px solid rgba(123, 140, 219, 0.3);
+//
+//@inputBg: #cfd6dd;
+//@inputColor: #000;
+//@inputPlaceholderColor: rgba(0, 0, 0, 0.4);
+//@inputBorder: 1px solid #d8dde3;
+//@inputFocusBg: #dce3ea;
+//@inputFocusBorder:  1px solid #eaedf1;
+//@inputFocusBoxShadow: 0px 0px 20px 0px rgba(255, 255, 255, 0.25);
+//@tableBg: rgba(0, 0, 0, 0.1);
+
+
+//.white {
+  @fontColor: #000;
+  @mainColor: #E1E6EC;
+  @boxShadow: 8px 8px 20px 0px rgba(32, 32, 34, 0.2), -8px -8px 20px 0px rgba(255, 255, 255, 0.2);
+  @textShadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+  @textShadowHover: 0px 0px 5px rgba(0, 0, 0, 0.4);
+  @buttonBorder: 1px solid rgba(255, 255, 255, 0.7);
+
+  @inputBg: #cfd6dd;
+  @inputColor: #000;
+  @inputPlaceholderColor: rgba(0, 0, 0, 0.4);
+  @inputBorder: 1px solid #d8dde3;
+
+  @inputFocusBg: #dce3ea;
+  @inputFocusBorder:  1px solid #eaedf1;
+
+  @inputFocusBoxShadow: 0px 0px 20px 0px rgba(255, 255, 255, 0.9);
+ @tableBg: rgba(0, 0, 0, 0.1);
+
+//}
+
+
 
 .noselect() {
   user-select: none;
@@ -24,8 +62,9 @@ button:focus, input:focus, textarea:focus, select:focus {
 }
 
 input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input:not([type="button"]):not([type="submit"]):not([type="reset"]):focus, textarea:hover, textarea:focus, select:hover, select:focus {
-  border-color: rgba(255, 255, 255, 0.5);
-  box-shadow: none;
+  //border-color: rgba(255, 255, 255, 0.5);
+  border: @inputFocusBorder;
+  box-shadow: @inputFocusBoxShadow;
 }
 
 @footerHeight: 100px;
@@ -61,8 +100,8 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 
   border-radius: 20px;
   background: @mainColor;
-  box-shadow: 8px 8px 30px 0px rgba(36, 41, 66, 0.8), -8px -8px 30px 0px rgba(73, 85, 136, 0.8);
-  border: 1px solid rgba(123, 140, 219, 0.3);
+  box-shadow: @boxShadow;
+  border: @buttonBorder;
   border-bottom-width: 0;
   border-right-width: 0;
 }
@@ -76,23 +115,25 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
   display: block;
   width: 97%;
   height: 55px;
-  background-color: #2d334e;
+
+  color: @inputColor;
+  background-color: @inputBg;
+  border: @inputBorder;
+
   border-radius: 8px;
-  border: 2px solid #2a304c;
-  color: @fontColor;
   font-size: 18px;
   margin-bottom: 8px;
   transition: border-color 200ms;
 }
 
 .content-block input::placeholder {
-  color: #a6a6ac;
+  color: @inputPlaceholderColor;
 }
 
 .content-block input:focus {
-  //outline: none !important;
-  //border: 1px solid @fontColor;
-  //box-shadow: none;
+  background-color: @inputFocusBg;
+  border: @inputFocusBorder;
+  box-shadow: @inputFocusBoxShadow;
 }
 
 
@@ -107,32 +148,35 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
   border-radius: 20px;
 
   background: @mainColor;
-  box-shadow: 8px 8px 20px 0px rgba(36, 41, 66, 0.8), -8px -8px 20px 0px rgba(73, 85, 136, 0.8);
-  border: 1px solid rgba(123, 140, 219, 0.3);
+  box-shadow: @boxShadow;
+  border: @buttonBorder;
   border-bottom-width: 0;
   border-right-width: 0;
 
-  text-shadow: 0px 0px 5px rgba(252, 247, 247, 0.25);
-  color: #f8f6f6;
+  text-shadow: @textShadow;
+  color: @fontColor;
   font-size: 20px;
   text-transform: uppercase;
 
-  transition: box-shadow 200ms;
+  transition: box-shadow 200ms, text-shadow 200ms;
 
   .noselect();
 }
 
 .button:hover, a.button:hover {
   background: @mainColor;
-  border: 1px solid rgba(123, 140, 219, 0.3);
+  border: @buttonBorder;
   border-bottom-width: 0;
   border-right-width: 0;
+  text-shadow: @textShadowHover;
+  //transform: scale(1.1);
   //box-shadow: 8px 8px 20px 0px rgba(36, 41, 66, 0.8), -8px -8px 20px 0px rgba(145, 158, 241, 0.8);
 }
 
 .button:focus, a.button:focus, .button.active {
   background: @mainColor;
-  border: 1px solid rgba(123, 140, 219, 0.3);
+  border: @buttonBorder;
+  text-shadow: @textShadow;
   border-bottom-width: 0;
   border-right-width: 0;
 }
@@ -155,7 +199,7 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
   .balance {
     font-size: 40px;
     font-weight: bold;
-    text-shadow: 0px 0px 5px rgba(252, 247, 247, 0.25);
+    text-shadow: @textShadow;
   }
 
   .balance-currency {
@@ -185,7 +229,8 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
     height: 190px;
 
     border-radius: 20px;
-    box-shadow: 8px 8px 20px 0px rgba(36, 41, 66, 0.8), -8px -8px 20px 0px rgba(73, 85, 136, 0.8);
+
+    box-shadow: @boxShadow;
     border: 1px solid rgba(123, 140, 219, 0.3);
     border-bottom-width: 0;
     border-right-width: 0;
@@ -196,7 +241,6 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
   }
 
   .spend-card:hover, .spend-card:focus, .spend-card:active {
-    background: @background;
     box-shadow: none;
     border-color: transparent;
   }
@@ -252,7 +296,7 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
     //padding-left: 4px;
   }
 
-  input {
+  input, textarea {
     width: 100%;
     margin: 0;
     box-sizing: border-box;
@@ -260,9 +304,24 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
     font-size: 20px;
 
     height: 55px;
-    color: #4c4c52;
-    background-color: #d2dbe5;
-    border: 2px solid #ced6df;
+    color: @inputColor;
+    background-color: @inputBg;
+    border: @inputBorder;
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: @inputPlaceholderColor;
+  }
+
+  input:focus, textarea:focus {
+    background-color: @inputFocusBg;
+    border: @inputFocusBorder;
+    box-shadow: @inputFocusBoxShadow;
+  }
+
+  textarea {
+    resize: none;
+    min-height: 100px;
   }
 }
 
@@ -280,6 +339,7 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
   margin: auto;
 
   h2 {
+    margin: 10px;
     text-align: left;
 
     .noselect();
@@ -406,7 +466,7 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
   font-weight: bold;
 
   a {
-    color: white;
+    color: @fontColor;
   }
 }
 
@@ -436,6 +496,12 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 .spend .no-active {
   filter: grayscale(100%);
   box-shadow: none;
+}
+
+.password-hint {
+  padding: 16px;
+  font-size: 20px;
+  text-align: center;
 }
 
 .spend-success-message {
@@ -505,8 +571,12 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
   margin-top: 40px;
 }
 
+.bipto {
+  //padding-top: 16px;
+}
 .bipto img {
-  padding-top: 16px;
+  border-radius: 20px;
+  margin-top: 16px;
 }
 
 .spend-title {
@@ -530,7 +600,11 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
   margin: 0 0 16px;
 }
 
-.push-wallet-link, .sharings-stat-head {
+.wallets-stat {
+  margin-top: 32px;
+}
+
+.push-wallet-link, .sharings-stat-head, .wallets-stat {
   .table {
     display: table;
     width: 100%;
@@ -541,10 +615,20 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
     display: table-row;
   }
 
+  .head {
+    //font-weight: bold;
+  }
+
   .td {
     display: table-cell;
     width: 20%;
   }
+
+  .td-small {
+    display: table-cell;
+    width: 10%;
+  }
+
   .td-big {
     display: table-cell;
     width: 30%;
@@ -553,7 +637,31 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
     display: table-cell;
     width: 40%;
   }
+}
 
+.wallets-stat {
+  .td, .td-small, .td-big {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .head {
+    font-size: 20px;
+    background-color: @tableBg;
+
+    .td, .td-small, .td-big {
+      //height: 36px;
+      //line-height: 36px;
+    }
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  .right {
+    text-align: right;
+  }
 }
 
 .sharings-stat-head {
@@ -586,43 +694,58 @@ a.open-wallet {
 }
 
 .campaign-admin-desktop-share {
-  margin: 20px auto 30px;
-  max-width: 692px;
+  margin: 20px auto 0px;
+  max-width: 414px;
+  //width: 100%;
   text-align: center;
 
   .share-text, .share-link {
-    font-size: 30px;
+    font-size: 20px;
+    text-align: left;
+    padding-left: 10px;
   }
 }
 
+
+.share-block {
+  margin-bottom: 30px;
+}
+
 .sms-share {
-  max-width: 250 + 150px;
+  position: relative;
+  max-width: 250 + 90px;
   text-align: center;
-  margin: 30px auto 0px;
+  margin: 30px auto 30px;
 }
 
 .sms-input-block {
-  width: 250px;
+  width: 230px;
   float: left;
 }
 
 .sms-send {
   display: block;
-  width: 140px;
+  width: 100px;
   height: 70px;
   float: left;
   margin: -8px 0 0 10px;
 }
 
 .share-desktop-btns {
-  width: 150px * 3 + 24 * 2;
-  margin: auto;
+  width: 102px * 3 + 24 * 2;
+  margin: 16px auto;
+  clear: both;
   //float: left;
 }
 
 .share-desktop-btn {
-  width: 150px;
-  height: 78px;
+  width: 102px;
+  height: 80px;
+  text-align: center;
+
+  img {
+    height: 100%;
+  }
 }
 
 a.share-desktop-qr {
@@ -631,20 +754,42 @@ a.share-desktop-qr {
   //float: left;
   margin: 10px 0px 0px 8px;
   padding: 0;
-  width: 170px * 1.5;
-  height: 170px * 1.5;
+  width: 330px;
+  height: 330px
 }
 
 img.qr-code {
   position: absolute;
   top: 0px;
   left: 0px;
+  min-width: 200px;
   border-radius: 20px;
   display: block;
-  width: 170px *  1.5;
-  height: 170px *  1.5;
+  width: 330px;
+  height: 330px;
 }
 
+div.share-desktop-qr {
+  position: relative;
+  width: 100%;
+  min-width: 200px;
+  height: auto;
+  //display: block;
+  //float: left;
+  margin: 20px 0px 0px 0px;
+  padding: 0;
+
+  img.qr-code {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+
+}
+
+.qr-wrapper {
+  //margin-top: 16px;
+}
 .landing-wrapper {
 
 }
@@ -654,6 +799,8 @@ img.landing {
   width: 100%;
   height: auto;
   max-width: 100%;
+
+  margin-top: 20px;
 
   user-drag: none;
   user-select: none;
@@ -692,7 +839,7 @@ img.landing {
 
 @media screen and (min-width: 600px) {
   .summary {
-    text-align: center;
+    //text-align: center;
   }
 
   .create-campaign-btn {
@@ -701,6 +848,14 @@ img.landing {
     display: inline-block;
     margin: 0px 20px;
     //margin: 0px auto 20px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+
+  .button:hover, a.button:hover {
+
+    text-shadow: @textShadow;
   }
 }
 
@@ -725,4 +880,12 @@ img.landing {
   .btn-tab + .btn-tab {
     margin-left: 10px;
   }
+}
+
+.back-btn path {
+  stroke: white;
+}
+
+.white .back-btn path {
+  stroke: black;
 }

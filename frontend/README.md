@@ -1,4 +1,4 @@
-# push gifs - frontend
+# minterpush-frontend
 
 ## Project setup
 ```

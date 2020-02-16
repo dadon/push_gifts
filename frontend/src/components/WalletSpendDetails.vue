@@ -8,11 +8,11 @@
             <div class="spend-title" v-html="title"></div>
 
             <div class="slider-wrapper">
-                <input type="range" class="slider" min="1" max="100" v-model="value"/>
+                <vue-slider v-model="value" tooltip="none" :min="1" :max="100"/>
             </div>
 
             <div class="login-input-block" v-if="spendType.needPhone">
-                <input type="text" placeholder="Enter phone +7..." v-model="phone">
+                <input type="text" placeholder="Enter phone +38..." v-model="phone">
             </div>
 
             <div class="login-input-block" v-if="spendType.needAddress">
@@ -21,19 +21,18 @@
 
             <div class="spend-error-message" v-if="errorMessage">{{ errorMessage }}</div>
 
-
-
             <div style="text-align: center">
                 <ButtonAsync :label="spendType.action" :handler="spend" style-name="instant-send-btn"></ButtonAsync>
             </div>
         </section>
-        <div style="text-align: center">
-            <button class="button instant-send-btn" @click="spendBack" v-if="successMessage || !spendType.title">ok</button>
-        </div>
+<!--        <div style="text-align: center">-->
+<!--            <button class="button instant-send-btn" @click="spendBack" v-if="successMessage || !spendType.title">ok</button>-->
+<!--        </div>-->
     </div>
 </template>
 
 <script>
+    import VueSlider from "vue-slider-component";
     import { generateId, sleep } from "@/utils";
     import { Types } from "@/store/wallet";
     import ButtonAsync from "@/components/ButtonAsync";
@@ -43,6 +42,7 @@
     export default {
         components: {
             ButtonAsync,
+            VueSlider,
         },
 
         props: {
@@ -115,9 +115,11 @@
                         toAddress: this.spendType.address,
                         payload: response.keyword,
                         amount: this.amount,
+                        convert: true,
+                        password: this.$store.state[Types.walletPassword],
                     });
 
-                    this.successMessage = `Success. Your phone will be refilled within 30 minutes.`;
+                    this.successMessage = `Success!\n Your phone will be refilled within 15 minutes.`;
                 } else {
                     this.errorMessage = `Error. Invalid phone number`;
                 }
@@ -132,10 +134,12 @@
                     toAddress: this.spendType.address,
                     payload: giftHash,
                     amount: this.amount,
+                    password: this.$store.state[Types.walletPassword],
                 });
 
                 if (success) {
-                    console.log("giftId", giftId);
+                    this.successMessage = `Success!\n You'll be redirected to timeloop.games soon.`;
+                    await sleep(200);
                     location.href = `https://timeloop.games/m/?gift=${giftId}`;
                 } else {
                     this.errorMessage = `Error. Please try again later.`;
@@ -153,10 +157,11 @@
                     type: this.spendType.id,
                     toAddress: this.address,
                     amount: this.amount,
+                    password: this.$store.state[Types.walletPassword],
                 });
 
                 if (success) {
-                    this.successMessage = "Success.";
+                    this.successMessage = `Success!\n Your coins have been sent.`;
                 } else {
                     this.errorMessage = "Error. Please try again later.";
                 }

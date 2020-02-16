@@ -2,7 +2,8 @@
     <admin-layout>
         <div class="admin-landing">
 
-            <img class="landing" src="../assets/landing_top.png"/>
+<!--            <img class="landing" src="../assets/landing_top.png"/>-->
+            <img class="landing" src="../assets/landing_top_light.png"/>
 
         </div>
 
@@ -132,7 +133,7 @@
                     result.push("to " + campaign.name);
                 }
                 if (campaign.balance) {
-                    result.push(`${campaign.balance} ${campaign.coin}`);
+                    result.push(`${campaign.balance.toFixed(2)} ${campaign.coin}`);
                 }
 
                 if (!result.length) {

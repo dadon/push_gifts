@@ -40,3 +40,23 @@ export async function post(endpoint: string, data: any): Promise<any> {
     return null;
 }
 
+export async function put(endpoint: string, data: any): Promise<any> {
+    const url = `${process.env.VUE_APP_API}/${endpoint}`;
+
+    data["uid"] = getUserId();
+    data["navigator"] = [
+        navigator.platform,
+        navigator.userAgent,
+        navigator.appVersion,
+        navigator.vendor,
+    ];
+
+    const response = await axios.put(url, data);
+
+    if (response.status === 200) {
+        return response.data;
+    }
+
+    return null;
+}
+

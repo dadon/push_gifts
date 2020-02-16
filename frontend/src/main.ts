@@ -10,6 +10,7 @@ import "mini.css/dist/mini-default.css";
 
 import "./styles/wallet2.less";
 import "./styles/slider.less";
+import { sha256 } from "@/utils/dom";
 
 
 // const Fingerprint2 = require("fingerprintjs2");
@@ -27,6 +28,8 @@ new Vue({
     store,
     render: h => h(App),
 }).$mount("#app");
+
+
 
 // if (window.requestIdleCallback) {
 //     requestIdleCallback(function () {

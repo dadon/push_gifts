@@ -1,7 +1,7 @@
 <template>
     <div class="buy-block row">
         <div class="campaign-buy-btn-wrapper">
-            <div class="tip">1. Tap to copy</div>
+            <div class="tip">1. tap to copy</div>
             <button class="button campaign-buy-btn copy-address" @click="copyAddress">
                 <div class="copied-message-wrapper" >
                     <div class="copied-message" :style="{ opacity: copiedMessage ? 1 : 0}">copied to clipboard</div>
@@ -18,11 +18,16 @@
         </div>
 
         <div class="campaign-buy-btn-wrapper">
-            <div class="tip">2. Paste in wallet</div>
+            <div class="tip">2. paste in wallet</div>
 
             <a class="button campaign-buy-btn open-wallet" :href="buyDeepLink" target="_blank">
                 Open <br> BIP wallet
             </a>
+        </div>
+
+        <div class=" share-desktop-qr" v-if="!isMobile && QRcode">
+            <div class="tip">or scan this QR with mobile wallet</div>
+            <img class="qr-code" v-bind:src="QRcode" v-if="QRcode" />
         </div>
     </div>
 </template>
@@ -30,6 +35,7 @@
 <script>
     import { isMobile, selectAllAndCopy } from "../utils/dom";
     import { sleep } from "../utils";
+    import * as QRCode from "qrcode";
 
     export default {
         props: {
@@ -40,6 +46,8 @@
             return {
                 hideAddress: false,
                 copiedMessage: false,
+                isMobile: isMobile(),
+                QRcode: null,
             };
         },
 
@@ -82,5 +90,12 @@
                 this.hideAddress = false;
             },
         },
+
+        async mounted() {
+            this.QRcode = await QRCode.toDataURL(this.address, {
+                width: 200,
+                height: 200
+            });
+        }
     };
 </script>

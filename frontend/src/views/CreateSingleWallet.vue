@@ -13,7 +13,7 @@
 
                     <div class="row">
                         <div class="col-sm-12 inline">
-                            <loader v-if="campaign.waitForRefill || campaign.balance === 0"/>
+                            <loader v-if="campaign.waitForRefill || campaign.balance === 0" label="waiting for coins"/>
                         </div>
                     </div>
                 </section>
@@ -22,7 +22,7 @@
 
         <transition name="fade">
             <section v-if="campaign && campaign.balance > 0">
-                <share-desktop :gift-size="campaign.balance" :gift-coin="campaign.coin" :url="shareLink" :single="true"/>
+                <share-desktop :gift-size="campaign.balance.toFixed(2)" :gift-coin="campaign.coin" :url="shareLink" :single="true"/>
             </section>
         </transition>
 
@@ -39,6 +39,12 @@
                             </div>
                             <div class="admin-input">
                                 <input type="text" v-model="name" placeholder="Your friend's name"/>
+                            </div>
+                            <div class="admin-input">
+                                <input type="text" v-model="password" placeholder="Password"/>
+                            </div>
+                            <div class="admin-input" v-if="password && password.length">
+                                <textarea v-model="passwordHint" placeholder="Password hint"></textarea>
                             </div>
                         </div>
                     </div>
@@ -89,6 +95,8 @@
                 rewardPerUser: 10,
                 name: null,
                 brandName: null,
+                password: null,
+                passwordHint: null,
                 saving: false,
                 showModal: false,
             };
@@ -135,6 +143,8 @@
                     this.updateState();
                     this.name = this.campaign.name;
                     this.brandName = this.campaign.brandName;
+                    this.password = this.campaign.password;
+                    this.passwordHint = this.campaign.passwordHint;
                 }
             },
 
@@ -146,8 +156,8 @@
             async save() {
                 console.log("save");
                 if (this.name === this.campaign.name &&
-                    this.rewardPerUser === this.campaign.rewardPerUser &&
-                    this.giftNum === this.campaign.giftNum &&
+                    this.password === this.campaign.password &&
+                    this.passwordHint === this.campaign.passwordHint &&
                     this.brandName === this.campaign.brandName) {
                     return;
                 }
@@ -161,8 +171,8 @@
                     data: {
                         name: this.name,
                         brandName: this.brandName,
-                        rewardPerUser: parseInt(this.rewardPerUser),
-                        giftNum: parseInt(this.giftNum),
+                        password: this.password,
+                        passwordHint: this.passwordHint,
                     },
                 });
 
@@ -194,11 +204,11 @@
                 this.saveBackground();
             },
 
-            rewardPerUser() {
+            password() {
                 this.saveBackground();
             },
 
-            giftNum() {
+            passwordHint() {
                 this.saveBackground();
             },
         },

@@ -2,7 +2,8 @@
     <wallet-layout>
         <loader v-if="!currentUser"/>
 
-        <div class="row">
+        <CampaignPassword v-if="isLocked" :campaign="campaign" />
+        <div class="row" v-if="!isLocked">
             <div class="col-sm-12 col-md-8 col-md-offset-2 col-lg-4 col-lg-offset-4 campaign-admin" v-if="currentUser">
 
 <!--                <transition name="fade">-->
@@ -53,7 +54,7 @@
                             <div class="spend">
                                 <button class="spend-card"
                                         v-for="item in spendTypes"
-                                        :style="{ background: `url(/img/logo/${item.id}.png) no-repeat center center`, backgroundSize: 'cover' }"
+                                        :style="{ background: `url(/img/logo/${item.id}.png?r=${rnd}) no-repeat center center`, backgroundSize: 'cover' }"
                                         :key="item.id" @click="spend(item)"></button>
                             </div>
                         </div>
@@ -86,9 +87,11 @@
     import Loader from "@/components/Loader";
     import WalletSpendDetails from "@/components/WalletSpendDetails";
     import BackButton from "@/components/BackButton";
+    import CampaignPassword from "@/components/CampaignPassword";
 
     export default {
         components: {
+            CampaignPassword,
             BackButton,
             ButtonAsync,
             WalletSpendDetails,
@@ -103,6 +106,7 @@
                 spendLoading: false,
                 spendTypes: SpendTypes,
                 currentSpend: null,
+                rnd: Math.random(),
             };
         },
 
@@ -141,19 +145,26 @@
             },
 
             localPrice() {
-                if (!this.currentUser || !this.campaign || !this.campaign.priceData) return null;
+                if (!this.currentUser || !this.campaign || !this.campaign.priceInfo) return null;
                 return {
-                    price: (this.currentUser.balance * this.campaign.priceData.price).toFixed(2),
-                    currency: this.campaign.priceData.currency,
+                    price: (this.currentUser.balance * this.campaign.priceInfo.price).toFixed(2),
+                    currency: this.campaign.priceInfo.currency,
                 };
 
             },
 
+            isLocked() {
+                if (this.campaign && this.currentUser.passwordHash && !this.walletPassword) {
+                    return true;
+                }
+
+                return false;
+            },
 
             ...mapState([
                 Types.currentUser,
                 Types.currentUserCampaign,
-
+                Types.walletPassword,
             ]),
         },
 

@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="app" class="white">
         <div class="page-container">
             <div class="content-wrap">
                 <router-view/>
@@ -10,7 +10,7 @@
                 <div class="github-link-wrapper" v-if="footerVisible">
                     <div class="github-link">
                         <a href="https://github.com/dadon/push_gifts" target="_blank"><img
-                                src="./assets/GitHub-Mark-Light-120px-plus.png"></a>
+                                src="./assets/GitHub-Mark-120px-plus.png"></a>
                     </div>
                 </div>
                 </transition>
@@ -45,7 +45,7 @@
                 this.show = false;
                 // console.log("rout", to, from);
                 this.checkFooterVisibility();
-
+                window.scrollTo(0, 0);
             },
         },
 

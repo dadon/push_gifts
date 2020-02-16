@@ -1,6 +1,7 @@
 import { generateMutations } from "./utils";
 import * as api from "../api";
 import router from "@/router";
+import { getUserId } from "@/utils/user_id";
 
 
 export const Types = {
@@ -35,34 +36,29 @@ export const Mutations = {
 
 export const Actions = {
     async [Types.createCampaign](context: any, type: string) {
-        const response = await api.post("campaign/create", { type });
+        const campaign = await api.post("campaign", { type });
 
-        if (response.success) {
-            context.commit(Types.currentCampaign, response.campaign);
-            router.push(`/create/${type}/${response.campaign.campaignId}`);
-        }
+        context.commit(Types.currentCampaign, campaign);
+        router.push(`/create/${type}/${campaign.campaignId}`);
     },
 
     async [Types.loadCampaign](context: any, campaignId: string) {
-        const response = await api.get(`campaign/${campaignId}`);
-        if (response.success) {
-            context.commit(Types.currentCampaign, response.campaign);
-            context.commit(Types.currentCampaignUsers, response.users);
-            console.log("loaded", response.campaign);
-        }
+        const campaign = await api.get(`campaign/${campaignId}`);
+        context.commit(Types.currentCampaign, campaign);
     },
 
     async [Types.saveCampaign](context: any, options: any) {
         console.log("Types.saveCampaign", Types.saveCampaign);
-        const response = await api.post(`campaign/${options.campaignId}`, options.data);
+        await api.put(`campaign/${options.campaignId}`, options.data);
         await context.dispatch(Types.loadCampaign, options.campaignId);
     },
 
     async [Types.loadCampaigns](context: any) {
-        const response = await api.get("campaigns");
+        const userId = getUserId();
+        const campaigns = await api.get(`campaigns/${userId}`);
 
-        if (response.campaigns && response.campaigns.length) {
-            context.commit(Types.campaigns, response.campaigns);
+        if (campaigns && campaigns.length) {
+            context.commit(Types.campaigns, campaigns);
         }
     },
 

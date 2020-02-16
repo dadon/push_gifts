@@ -9,6 +9,7 @@ API and frontend for MinterPush Hackathon
 </ul>
 
 ## Backend setup
+
 To run the local version of api, browse to the backend folder and run:
 ```
 docker-compose up
@@ -44,3 +45,7 @@ To bundle frontend for production:
 ```
 npm run build
 ```
+
+## License
+
+[ISC](http://opensource.org/licenses/ISC)

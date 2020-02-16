@@ -1,9 +1,11 @@
-const redis = require("redis");
-const {promisify} = require("util");
+import { sleep } from "../utils";
 
-const client = redis.createClient({
-    host: process.env.REDIS_HOST,
-});
+
+const redis = require("redis");
+const { promisify } = require("util");
+
+let client = redis.createClient({ host: process.env.REDIS_HOST });
+client.on("error", (err) => console.error("Redis error: ", err));
 
 const get = promisify(client.get).bind(client);
 const set = promisify(client.set).bind(client);
@@ -15,6 +17,8 @@ const lrange = promisify(client.lrange).bind(client);
 const llen = promisify(client.llen).bind(client);
 const sadd = promisify(client.sadd).bind(client);
 const smembers = promisify(client.smembers).bind(client);
+
+
 
 const PREFIX = process.env.REDIS_PREFIX || "minterpush";
 

@@ -2,8 +2,8 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 
-import * as campaign from "./campaign";
-import * as user from "./user";
+import { RegisterRoutes } from "./routes/routes";
+import * as path from "path";
 
 
 export default function (port) {
@@ -12,18 +12,46 @@ export default function (port) {
     app.use(cors());
     app.use(bodyParser.json());
 
-    app.post("/campaign/create", campaign.create);
-    app.post("/campaign/sms", campaign.sms);
-    app.get("/campaign/:campaignId", campaign.get);
-    app.post("/campaign/:campaignId", campaign.update);
+    app.get("/api.json", (req, res) => {
+        const options = {
+            root: path.join(__dirname, "..", "..", "docs"),
+            dotfiles: "deny",
+            headers: {
+                "x-timestamp": Date.now(),
+                "x-sent": true,
+            },
+        };
 
-    app.get("/campaigns", campaign.getListByUid);
-    app.get("/campaign-public/:campaignPublicId", campaign.getPublic);
+        res.sendFile("swagger.json", options, function (err) {
+            if (err) {
 
-    app.post("/check-phone", user.checkPhone);
-    app.post("/user/create", user.create);
-    app.post("/user/:userId/spend", user.spend);
-    app.get("/user/:userId", user.get);
+            } else {
+
+            }
+        });
+    });
+
+
+    RegisterRoutes(app);
+
+    app.use(
+        (
+            err: any,
+            _req: express.Request,
+            res: express.Response,
+            next: express.NextFunction,
+        ) => {
+            const status = err.status || 500;
+            const body = {
+                fields: err.fields || undefined,
+                message: err.message || "An error occurred during the request.",
+                name: err.name,
+                status,
+            };
+            res.status(status).json(body);
+            next();
+        },
+    );
 
     app.listen(port, () => console.log("express listen to ", port));
 };

@@ -1,10 +1,16 @@
 {
-  "name": "minterpush-backend",
-  "version": "1.0.0",
-  "description": "Backend for MinterPush Hackathon prototype",
+  "name": "push-gifts-api",
+  "version": "0.3.0",
+  "description": "API for MinterPush Hackathon Stage 3",
   "main": "src/index.ts",
   "scripts": {
     "start": "nodemon",
+    "build:routes": "mkdir -p src/api/routes && tsoa routes",
+    "build:docs": "mkdir -p docs && tsoa swagger",
+    "build:ts": "tsc",
+    "build:docker": "docker build -t dmitryzvada/push-gifts-backend .",
+    "build": "npm run build:routes && npm run build:docs && npm run build:ts",
+    "server": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -30,6 +36,7 @@
     "nanoid": "^2.1.4",
     "nodemailer": "^6.4.2",
     "redis": "^2.8.0",
+    "tsoa": "^2.5.13",
     "twilio": "^3.39.3"
   }
 }

@@ -1,7 +1,7 @@
 import rdb from "./rdb";
 import { CoinConvertRecord } from "../types";
 import { sendCoins } from "../external_api/minter";
-import { getWalletKey } from "./wallet";
+import { getWalletKey } from "./minter_wallet";
 
 
 export async function getConvertRecords(): Promise<CoinConvertRecord[]> {

@@ -12,6 +12,7 @@
     "outDir": "dist",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
     "baseUrl": ".",
     "paths": {
       "*": [

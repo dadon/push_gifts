@@ -1,5 +1,6 @@
 node_modules/
 dist/
+docs/
 .idea/
 .env
 .DS_Store

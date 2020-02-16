@@ -1,0 +1,22 @@
+version: "3.3"
+services:
+  api:
+    image: dmitryzvada/push-gifts-backend:0.3.2
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: docker
+      REDIS_HOST: redis
+      ENCRYPTION_KEY: JBv@}h9?Xcbr=M[TBr0{K9?s4QK)-L<T
+      CHAIN_COIN: BIP
+      CHAIN_ID: 1
+      API_URL: http://localhost:3000
+      SITE_URL: http://localhost:8080
+  redis:
+    image: "redis:alpine"
+  docs:
+    image: redocly/redoc
+    ports:
+      - "3001:80"
+    environment:
+      SPEC_URL: http://localhost:3000/api.json

@@ -8,7 +8,7 @@ import * as update_exchange_rate from "./background/update_exchange_rate";
 import { sendSms } from "./external_api/sms";
 
 
-api(process.env.PORT || 9090);
+api(process.env.PORT || 3000);
 
 if (process.env.BACKGROUND) {
     background.registerTasks();

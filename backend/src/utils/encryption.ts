@@ -41,6 +41,10 @@ export function checkSign(payload: string, signature: string, publicKey: string)
     return verifierObject.verify(publicKey, signature, "base64");
 }
 
+export function sha256(message: string) {
+    return crypto.createHash('sha256').update(message).digest('hex');
+}
+
 function checkEncryptionKeyLength(encryptionKey: string) {
     if (encryptionKey.length !== 32) {
         throw "encryption key must be 256 bits (32 characters)";

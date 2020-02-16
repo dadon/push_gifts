@@ -1,6 +1,12 @@
-const client = require("twilio")(process.env.TWILLIO_SID, process.env.TWILLIO_TOKEN);
+
+let client = null;
+
 
 export function sendSms(phone: string, message: string) {
+    if (!client) {
+         client = require("twilio")(process.env.TWILLIO_SID, process.env.TWILLIO_TOKEN);
+    }
+
     return client.messages
         .create({
             body: message,

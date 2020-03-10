@@ -8,6 +8,7 @@ export async function run(handlers: BlockHandler[]) {
     const lastBlock = await minter.getCurrentBlock();
 
     let currentBlock = lastSavedBlock;
+    console.log("currentBlock ", currentBlock, lastBlock);
 
     let processedBlocks = 0;
 
@@ -30,6 +31,12 @@ export async function run(handlers: BlockHandler[]) {
         if (processedBlocks > 50) {
             await db.setLastBlock(currentBlock);
             processedBlocks = 0;
+        }
+    }
+
+    for (let handler of handlers) {
+        if (handler.dispose) {
+            await handler.dispose();
         }
     }
 

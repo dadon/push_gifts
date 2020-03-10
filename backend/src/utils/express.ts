@@ -27,5 +27,7 @@ export function getUserLocaleRequest(req): object {
         result["currency"] = getCurrencyCodeByCountryCode(result["country"]);
     }
 
+    console.log("getUserLocaleRequest", result);
+
     return result;
 }

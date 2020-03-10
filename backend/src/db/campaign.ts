@@ -4,13 +4,14 @@ import { generateId } from "../utils";
 import { createWallet } from "./minter_wallet";
 import {
     Campaign,
-    CampaignDeposit,
-    CampaignStat,
-    CampaignType,
     CampaignCreateData,
     CampaignEditableData,
+    CampaignStat,
+    CampaignType,
     LocaleInfo,
-    PriceInfo, PublicCampaign, Wallet,
+    PriceInfo,
+    PublicCampaign,
+    Wallet,
 } from "../types";
 import { getBipPrice, getCurrencyRate } from "./background";
 import * as minter from "../external_api/minter";
@@ -28,13 +29,21 @@ export async function createCampaign(data: CampaignCreateData): Promise<Campaign
         type: data.type,
         campaignPublicId: generateId(CAMPAIGN_ID_LEN),
         address: wallet.address,
-        balance: 0,
+        balance: data.balance || 0,
         rewardPerUser: 0,
         created: Date.now(),
     };
 
+    if (data.coin) {
+        campaign.coin = data.coin;
+    }
+
     if (campaign.type === CampaignType.Single) {
         campaign.recipientId = await createWalletSingle(campaignId);
+
+        if (data.sendFrom) {
+            campaign.sendFrom = data.sendFrom;
+        }
     }
 
     if (data.data) {
@@ -50,6 +59,8 @@ export async function createCampaign(data: CampaignCreateData): Promise<Campaign
     if (data.uid) {
         await rdb.sadd(rdb.buildKey("uidCampaigns", data.uid), campaignId);
     }
+
+    setCampaignUrl(campaign);
 
     return campaign;
 }
@@ -72,9 +83,18 @@ export async function updateCampaign(campaignId: string, data: CampaignEditableD
     await saveCampaign(campaign);
 }
 
-export function getCampaign(campaignId: string): Promise<Campaign> {
+function setCampaignUrl(campaign: Campaign) {
+    let endpoint = campaign.type === CampaignType.Single ? `w-${campaign.recipientId}` : `c-${campaign.campaignPublicId}`;
+    campaign.url = `${process.env.SITE_URL}/${endpoint}`;
+}
+
+export async function getCampaign(campaignId: string): Promise<Campaign> {
     if (!campaignId || campaignId.length !== CAMPAIGN_ID_LEN) return null;
-    return rdb.getData(rdb.buildKey("campaign", campaignId));
+    const campaign: Campaign = await rdb.getData(rdb.buildKey("campaign", campaignId));
+
+    setCampaignUrl(campaign);
+
+    return campaign;
 }
 
 
@@ -106,7 +126,6 @@ export async function getCampaignPublicById(campaignPublicId: string, localeData
 
     return null;
 }
-
 
 
 export async function getCampaignByPublicId(campaignPublicId: string): Promise<Campaign> {
@@ -158,42 +177,6 @@ export async function calculateStat(campaigns: Campaign[]) {
     }
 }
 
-export async function checkRefillTx(txHash: string): Promise<Boolean> {
-    return;
-}
-
-export async function addRefillTx(campaign: Campaign, txHash: string, amount: number, coin: string, from: string): Promise<Boolean> {
-    console.log("addRefillTx", amount);
-    const exist = await checkRefillTx(txHash);
-    if (exist) {
-        console.log(`tx ${txHash} is already processed`);
-        return;
-    }
-
-    if (!campaign.balance && !campaign.coin) {
-        campaign.coin = coin;
-    }
-
-    if (campaign.coin === coin) {
-        campaign.balance += amount;
-    }
-
-    await updateCampaignUsdRate(campaign);
-
-    await saveCampaign(campaign);
-
-    const tx: CampaignDeposit = {
-        campaignId: campaign.campaignId,
-        txHash: txHash,
-        txFrom: from,
-        amount: amount,
-        coin: coin,
-        created: Date.now(),
-    };
-
-    await rdb.setData(rdb.buildKey("refillTx", txHash), tx);
-}
-
 export function saveCampaign(campaign: Campaign) {
     campaign.waitForRefill = checkWaitForRefill(campaign);
     console.log("saveCampaign", campaign);
@@ -228,11 +211,12 @@ export async function calculateCoinPrice(campaign: Campaign, localeData: LocaleI
     const result = {
         currency: "USD",
         price: usdPrice,
+        priceUsd: usdPrice,
     };
 
     if (localeData && localeData["currency"] && localeData["currency"] !== "USD") {
         const currencyRates = await getCurrencyRate();
-        if (currencyRates["rates"] && currencyRates["rates"][localeData["currency"]]) {
+        if (currencyRates && currencyRates["rates"] && currencyRates["rates"][localeData["currency"]]) {
             const localPrice = usdPrice * currencyRates["rates"][localeData["currency"]];
             result.currency = localeData["currency"];
             result.price = localPrice;

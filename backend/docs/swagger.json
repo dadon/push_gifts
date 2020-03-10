@@ -1,0 +1,1034 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"CampaignType": {
+				"enum": [
+					"single",
+					"mass"
+				],
+				"type": "string"
+			},
+			"CampaignStat": {
+				"properties": {
+					"visitorNum": {
+						"type": "number",
+						"format": "double",
+						"description": "Amount of users that visited push wallet web page"
+					},
+					"usersNum": {
+						"type": "number",
+						"format": "double",
+						"description": "Amount of users that claimed gift via SMS authorization"
+					}
+				},
+				"required": [
+					"visitorNum",
+					"usersNum"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"CampaignSendFrom": {
+				"properties": {
+					"address": {
+						"type": "string"
+					},
+					"amount": {
+						"type": "number",
+						"format": "double"
+					},
+					"txHash": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"address",
+					"amount"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"Campaign": {
+				"properties": {
+					"campaignId": {
+						"type": "string",
+						"description": "Campaign ID"
+					},
+					"type": {
+						"$ref": "#/components/schemas/CampaignType",
+						"description": "Type of the campaign<br>\nCan be 'single' or 'mass'"
+					},
+					"address": {
+						"type": "string",
+						"description": "Minter wallet address (MxXXXXXX...)"
+					},
+					"balance": {
+						"type": "number",
+						"format": "double",
+						"description": "Current balance of campaign wallet in coins"
+					},
+					"created": {
+						"type": "number",
+						"format": "double",
+						"description": "Date of creation"
+					},
+					"coin": {
+						"type": "string",
+						"description": "Minter coin ticker, used for gifts\nIt's determined automatically, when wallet receives coins",
+						"nullable": true
+					},
+					"coinToBip": {
+						"type": "number",
+						"format": "double",
+						"description": "Price of coin in BIPs",
+						"nullable": true
+					},
+					"name": {
+						"type": "string",
+						"description": "Name of your friend, in case of single type<br>\nOr just internal name of this campaign in case of mass type",
+						"nullable": true
+					},
+					"url": {
+						"type": "string",
+						"description": "Link to push-wallet",
+						"nullable": true
+					},
+					"brandName": {
+						"type": "string",
+						"description": "Your name or name of your brand/company",
+						"nullable": true
+					},
+					"password": {
+						"type": "string",
+						"description": "Password for unlocking gift",
+						"nullable": true
+					},
+					"passwordHint": {
+						"type": "string",
+						"nullable": true
+					},
+					"recipientId": {
+						"type": "string",
+						"description": "ID of recipient of gift",
+						"nullable": true
+					},
+					"campaignPublicId": {
+						"type": "string",
+						"description": "ID of mass campaign",
+						"nullable": true
+					},
+					"rewardPerUser": {
+						"type": "number",
+						"format": "double",
+						"description": "Amount of coins per gift",
+						"nullable": true
+					},
+					"rewardPerUserUsd": {
+						"type": "number",
+						"format": "double",
+						"description": "Value of gift in USD",
+						"nullable": true
+					},
+					"giftNum": {
+						"type": "number",
+						"format": "double",
+						"description": "Amount of gifts left",
+						"nullable": true
+					},
+					"runOutOfGifts": {
+						"type": "boolean",
+						"description": "Flag indicating that campaign run out of gifts and needs refill of the balance to continue",
+						"nullable": true
+					},
+					"waitForRefill": {
+						"type": "boolean",
+						"nullable": true
+					},
+					"stat": {
+						"$ref": "#/components/schemas/CampaignStat",
+						"description": "Campaign statistics",
+						"nullable": true
+					},
+					"sendFrom": {
+						"$ref": "#/components/schemas/CampaignSendFrom",
+						"nullable": true
+					}
+				},
+				"required": [
+					"campaignId",
+					"type",
+					"address",
+					"balance",
+					"created"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"CampaignEditableData": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "Name of your friend, in case of single type<br>\nOr just internal name of this campaign in case of mass type",
+						"nullable": true
+					},
+					"brandName": {
+						"type": "string",
+						"description": "Your name or name of your brand/company",
+						"nullable": true
+					},
+					"rewardPerUser": {
+						"type": "number",
+						"format": "double",
+						"description": "How many coins each user get in mass type of campaign",
+						"nullable": true
+					},
+					"giftNum": {
+						"type": "number",
+						"format": "double",
+						"description": "Amount of gifts in mass type of campaign",
+						"nullable": true
+					},
+					"password": {
+						"type": "string",
+						"description": "Password needed to unlock gift",
+						"nullable": true
+					},
+					"passwordHint": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"type": "object",
+				"additionalProperties": true
+			},
+			"CampaignCreateData": {
+				"properties": {
+					"type": {
+						"$ref": "#/components/schemas/CampaignType",
+						"description": "Type of the campaign<br>\nCan be 'single' or 'mass'"
+					},
+					"uid": {
+						"type": "string",
+						"description": "Optional user id",
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/CampaignEditableData",
+						"description": "Settings of this campaign",
+						"nullable": true
+					},
+					"balance": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"coin": {
+						"type": "string",
+						"nullable": true
+					},
+					"sendFrom": {
+						"$ref": "#/components/schemas/CampaignSendFrom",
+						"nullable": true
+					}
+				},
+				"required": [
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"SimpleResponse": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"error": {
+						"type": "string",
+						"nullable": true
+					},
+					"data": {
+						"additionalProperties": true,
+						"type": "object",
+						"nullable": true
+					}
+				},
+				"required": [
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"LocaleInfo": {
+				"properties": {
+					"lang": {
+						"type": "string",
+						"description": "Language set on user's device",
+						"nullable": true
+					},
+					"ip": {
+						"type": "string",
+						"description": "User IP address",
+						"nullable": true
+					},
+					"country": {
+						"type": "string",
+						"description": "Country where user located at this moment",
+						"nullable": true
+					},
+					"currency": {
+						"type": "string",
+						"description": "Currency that is official in country where user is located at this moment",
+						"nullable": true
+					}
+				},
+				"type": "object",
+				"additionalProperties": true
+			},
+			"PushWalletSpend": {
+				"properties": {
+					"addressTo": {
+						"type": "string",
+						"description": "Minter address where user sent or spent the money"
+					},
+					"type": {
+						"type": "string",
+						"description": "ID of service, where user sent his coins (Time Loop, Bip2Phone, Send)"
+					},
+					"payload": {
+						"type": "string",
+						"description": "Payload of Minter transaction (for example - hash of secret for Time Loop)"
+					},
+					"amount": {
+						"type": "number",
+						"format": "double",
+						"description": "Amount of coins spent"
+					},
+					"txHash": {
+						"type": "string",
+						"description": "Minter transaction hash"
+					}
+				},
+				"required": [
+					"addressTo",
+					"type",
+					"payload",
+					"amount",
+					"txHash"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"Wallet": {
+				"properties": {
+					"walletId": {
+						"type": "string",
+						"description": "ID of the wallet"
+					},
+					"campaignId": {
+						"type": "string",
+						"description": "ID of the campaign"
+					},
+					"balance": {
+						"type": "number",
+						"format": "double",
+						"description": "Current wallet balance in coins"
+					},
+					"created": {
+						"type": "number",
+						"format": "double"
+					},
+					"active": {
+						"type": "boolean"
+					},
+					"uid": {
+						"type": "string",
+						"description": "User ID",
+						"nullable": true
+					},
+					"email": {
+						"type": "string",
+						"nullable": true
+					},
+					"phone": {
+						"type": "string",
+						"description": "Phone number of user that claimed gift",
+						"nullable": true
+					},
+					"localeInfo": {
+						"$ref": "#/components/schemas/LocaleInfo",
+						"description": "Language, currency, country and IP of user",
+						"nullable": true
+					},
+					"navigator": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "User device info (platform, browser versions etc)",
+						"nullable": true
+					},
+					"spendRecords": {
+						"items": {
+							"$ref": "#/components/schemas/PushWalletSpend"
+						},
+						"type": "array",
+						"description": "List of services where user spent his coins",
+						"nullable": true
+					}
+				},
+				"required": [
+					"walletId",
+					"campaignId",
+					"balance",
+					"created",
+					"active"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"PriceInfo": {
+				"properties": {
+					"currency": {
+						"type": "string",
+						"description": "Currency that is used in user's country"
+					},
+					"price": {
+						"type": "number",
+						"format": "double",
+						"description": "Price for 1 Minter coin in currency"
+					},
+					"priceUsd": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					}
+				},
+				"required": [
+					"currency",
+					"price"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"PublicCampaign": {
+				"properties": {
+					"campaignPublicId": {
+						"type": "string",
+						"description": "Campaign ID"
+					},
+					"type": {
+						"$ref": "#/components/schemas/CampaignType",
+						"description": "Type of the campaign<br>\nCan be 'single' or 'mass'"
+					},
+					"coin": {
+						"type": "string",
+						"description": "Minter coin ticker",
+						"nullable": true
+					},
+					"name": {
+						"type": "string",
+						"description": "Name of recipient, in case of single type<br>\nOr just internal name of this campaign in case of mass type",
+						"nullable": true
+					},
+					"brandName": {
+						"type": "string",
+						"description": "Name of sender",
+						"nullable": true
+					},
+					"coinToBip": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"rewardPerUser": {
+						"type": "number",
+						"format": "double",
+						"description": "Amount of coins in one gift",
+						"nullable": true
+					},
+					"localeInfo": {
+						"$ref": "#/components/schemas/LocaleInfo",
+						"description": "Language, currency, country and IP of user",
+						"nullable": true
+					},
+					"priceInfo": {
+						"$ref": "#/components/schemas/PriceInfo",
+						"description": "Currency and price of one coin in that currency",
+						"nullable": true
+					},
+					"runOutOfGifts": {
+						"type": "boolean",
+						"description": "Flag, that indicates if campaign run out of balance for gifts",
+						"nullable": true
+					},
+					"active": {
+						"type": "boolean",
+						"nullable": true
+					},
+					"passwordHint": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"campaignPublicId",
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"BipToPhoneResponse": {
+				"properties": {
+					"keyword": {
+						"type": "string"
+					},
+					"minbip": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"keyword",
+					"minbip"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"PhoneData": {
+				"properties": {
+					"phone": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"phone"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"SmsData": {
+				"properties": {
+					"phone": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"phone",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"WalletCreateData": {
+				"properties": {
+					"campaignPublicId": {
+						"type": "string",
+						"description": "Campaign ID"
+					},
+					"uid": {
+						"type": "string",
+						"description": "User ID",
+						"nullable": true
+					},
+					"email": {
+						"type": "string",
+						"nullable": true
+					},
+					"phone": {
+						"type": "string",
+						"nullable": true
+					},
+					"localeInfo": {
+						"$ref": "#/components/schemas/LocaleInfo",
+						"nullable": true
+					},
+					"navigator": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"nullable": true
+					}
+				},
+				"required": [
+					"campaignPublicId"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"SpendType": {
+				"properties": {
+					"type": {
+						"type": "string"
+					},
+					"spendTitle": {
+						"type": "string",
+						"nullable": true
+					},
+					"spendAction": {
+						"type": "string",
+						"nullable": true
+					},
+					"needPhone": {
+						"type": "boolean",
+						"nullable": true
+					},
+					"needAddress": {
+						"type": "boolean",
+						"nullable": true
+					},
+					"imageLocalization": {
+						"type": "boolean",
+						"nullable": true
+					},
+					"giftCard": {
+						"type": "boolean",
+						"nullable": true
+					},
+					"hasLink": {
+						"type": "boolean",
+						"nullable": true
+					},
+					"priceUsd": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"address": {
+						"type": "string",
+						"nullable": true
+					},
+					"group": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"PublicWallet": {
+				"properties": {
+					"walletId": {
+						"type": "string",
+						"description": "Wallet ID"
+					},
+					"balance": {
+						"type": "number",
+						"format": "double",
+						"description": "Wallet balance in coins"
+					},
+					"email": {
+						"type": "string",
+						"nullable": true
+					},
+					"phone": {
+						"type": "string",
+						"description": "Phone number of user",
+						"nullable": true
+					},
+					"campaign": {
+						"$ref": "#/components/schemas/PublicCampaign",
+						"description": "Campaign object",
+						"nullable": true
+					},
+					"passwordHash": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"walletId",
+					"balance"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"PublicWalletSpendData": {
+				"properties": {
+					"type": {
+						"type": "string",
+						"description": "Service name"
+					},
+					"toAddress": {
+						"type": "string",
+						"description": "Minter address"
+					},
+					"amount": {
+						"type": "number",
+						"format": "double",
+						"description": "Amount of coins",
+						"nullable": true
+					},
+					"payload": {
+						"type": "string",
+						"description": "Payload of Minter transaction (for example secret hash for Time Loop top-up",
+						"nullable": true
+					},
+					"convert": {
+						"type": "boolean",
+						"description": "Flag that indicate necessity to convert coins into another type of Minter coins",
+						"nullable": true
+					},
+					"password": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"type",
+					"toAddress"
+				],
+				"type": "object",
+				"additionalProperties": true
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "push-gifts-api",
+		"version": "0.3.0",
+		"description": "API for MinterPush Hackathon Stage 3",
+		"license": {
+			"name": "ISC"
+		}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/campaign": {
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Campaign"
+								}
+							}
+						},
+						"description": "Ok"
+					}
+				},
+				"description": "Creates new Campaign. <br><br>\n\nCampaign is a Minter wallet and settings that can be shared with users via usual web links in form of Push Wallet.<br>\nWhen user open this link in any browser, he can claim coins and spend them on phone refills, game accounts top-up and gift cards.<br><br>\nThere are two types of campaigns:\n1. **single** - for sending to one user. In this type of campaigns push wallet has unique link and immediately accessible for user to spend without authorization.\n2. **mass** - for sending to unknown set of users. It has universal link that leads to locked push wallet, where user can claim a gift by authorizing via his phone number.",
+				"tags": [
+					"Campaign"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CampaignCreateData"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/campaign/{id}": {
+			"get": {
+				"operationId": "Get",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Campaign"
+								}
+							}
+						},
+						"description": "Ok"
+					}
+				},
+				"description": "Return information about Campaign",
+				"tags": [
+					"Campaign"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Campaign ID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SimpleResponse"
+								}
+							}
+						},
+						"description": "Ok"
+					}
+				},
+				"description": "Update Campaign information<br>\nCampaign can be updated anytime after creation",
+				"tags": [
+					"Campaign"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Campaign ID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CampaignEditableData"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/campaign/{id}/wallets": {
+			"get": {
+				"operationId": "GetWallets",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Wallet"
+									},
+									"type": "array"
+								}
+							}
+						},
+						"description": "Ok"
+					}
+				},
+				"tags": [
+					"Campaign"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Campaign ID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/campaigns/{uid}": {
+			"get": {
+				"operationId": "ListByUid",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Campaign"
+									},
+									"type": "array"
+								}
+							}
+						},
+						"description": "Ok"
+					}
+				},
+				"description": "Return information about Campaign",
+				"tags": [
+					"Campaign"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "User ID",
+						"in": "path",
+						"name": "uid",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/campaign-public/{id}": {
+			"get": {
+				"operationId": "GetPublic",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicCampaign"
+								}
+							}
+						},
+						"description": "Ok"
+					}
+				},
+				"description": "Return information about Campaign",
+				"tags": [
+					"Campaign"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Campaign ID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "User ID",
+						"in": "query",
+						"name": "uid",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/wallet/spend-types": {
+			"get": {
+				"operationId": "SpendTypes",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/SpendType"
+									},
+									"type": "array"
+								}
+							}
+						},
+						"description": "Ok"
+					}
+				},
+				"description": "Return information about spend types",
+				"tags": [
+					"Wallet"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/wallet/{id}": {
+			"get": {
+				"operationId": "Get",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicWallet"
+								}
+							}
+						},
+						"description": "Ok"
+					}
+				},
+				"description": "Return public information about wallet",
+				"tags": [
+					"Wallet"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Wallet ID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/wallet/{id}/spend": {
+			"post": {
+				"operationId": "Spend",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SimpleResponse"
+								}
+							}
+						},
+						"description": "Ok"
+					}
+				},
+				"description": "Create spend record",
+				"tags": [
+					"Wallet"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Wallet ID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublicWalletSpendData"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "https://localhost:3000/"
+		}
+	]
+}

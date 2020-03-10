@@ -5,10 +5,11 @@ import * as db from "../db/wallet";
 
 import {
     PublicWallet, PublicWalletSpendData,
-    SimpleResponse,
+    SimpleResponse, SpendType,
     WalletCreateData,
 } from "../types";
 import { getUserLocaleRequest } from "../utils";
+import { getTypes } from "../db/spend_type";
 
 
 @Tags("Wallet")
@@ -30,12 +31,22 @@ export class WalletController extends Controller {
         };
     }
 
+    /** Return information about spend types  */
+    @Get("spend-types")
+    public async spendTypes(): Promise<SpendType[]> {
+        const data = await getTypes();
+        return Object.values(data.spendTypesMap);
+    }
+
     /** Return public information about wallet  */
     @Get("{id}")
     public async get(
         /** Wallet ID  */
-        id: string): Promise<PublicWallet> {
-        return db.getPublicWallet(id);
+        id: string, @Request() req: any): Promise<PublicWallet> {
+
+        const localeInfo = getUserLocaleRequest(req);
+
+        return db.getPublicWallet(id, localeInfo);
     }
 
     /** Create spend record  */
@@ -44,10 +55,18 @@ export class WalletController extends Controller {
         /** Wallet ID */
         id: string, @Body() data: PublicWalletSpendData): Promise<SimpleResponse> {
 
-        const success = await db.spend(id, data);
+        let payload: any = null;
+
+        try {
+            payload = await db.spend(id, data);
+        } catch (e) {
+
+        }
 
         return {
-            success: success,
+            success: Boolean(payload),
+            data: payload,
         };
     }
+
 }

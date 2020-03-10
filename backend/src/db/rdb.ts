@@ -17,6 +17,7 @@ const lrange = promisify(client.lrange).bind(client);
 const llen = promisify(client.llen).bind(client);
 const sadd = promisify(client.sadd).bind(client);
 const smembers = promisify(client.smembers).bind(client);
+const keys = promisify(client.keys).bind(client);
 
 
 
@@ -32,6 +33,7 @@ export default {
     lrem,
     sadd,
     smembers,
+    keys,
 
     buildKey(...keys: string[]): string {
         return [PREFIX, ...arguments].join(":");

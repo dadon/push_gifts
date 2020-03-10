@@ -8,14 +8,16 @@ import {
     PublicWalletSpendData,
     Wallet,
     PushWalletSpend,
-    WalletCreateData,
+    WalletCreateData, LocaleInfo, GiftCard,
 } from "../types";
 import { sendMail } from "../external_api/email";
 import { sdk, sellCoins, sendCoins } from "../external_api/minter";
 import { getWalletKey } from "./minter_wallet";
 import { sendSms } from "../external_api/sms";
 import { addRecord } from "./coin_convert";
-import { getCoinPrice } from "./background";
+import { getBipPrice, getCoinPrice } from "./background";
+import { getTypes } from "./spend_type";
+import * as gift_card from "./gift_card";
 
 
 const USER_ID_LEN = 8;
@@ -110,7 +112,7 @@ export async function getWallet(walletId: string): Promise<Wallet> {
     return wallet;
 }
 
-export async function getPublicWallet(walletId: string): Promise<PublicWallet> {
+export async function getPublicWallet(walletId: string, localeData: LocaleInfo): Promise<PublicWallet> {
     const wallet: Wallet = await getWallet(walletId);
     if (wallet) {
         const publicWallet: PublicWallet = {
@@ -127,13 +129,26 @@ export async function getPublicWallet(walletId: string): Promise<PublicWallet> {
 
             if (campaign.type === CampaignType.Single) {
                 publicWallet.balance = campaign.balance;
+
+                if (campaign.sendFrom && !campaign.sendFrom.txHash) {
+                    campaign.sendFrom.txHash = await sendCoins(
+                        await getWalletKey(campaign.sendFrom.address),
+                        {
+                            to: campaign.address,
+                            coin: campaign.coin,
+                            amount: campaign.sendFrom.amount,
+                        }, campaign.coin
+                    );
+
+                    await saveCampaign(campaign);
+                }
             }
 
             if (campaign.password) {
                 publicWallet.passwordHash = sha256(campaign.password);
             }
 
-            publicWallet.campaign = await getCampaignPublic(campaign, wallet.localeInfo);
+            publicWallet.campaign = await getCampaignPublic(campaign, localeData);
         }
 
         return publicWallet;
@@ -148,7 +163,7 @@ export async function spend(walletId: string, data: PublicWalletSpendData) {
     const campaign = await getCampaign(wallet.campaignId);
 
     if (campaign.password && campaign.password !== data.password) {
-        return false;
+        throw "Error. Invalid password";
     }
 
     let balance = wallet.balance;
@@ -157,11 +172,25 @@ export async function spend(walletId: string, data: PublicWalletSpendData) {
         balance = campaign.balance;
     }
 
-    if (balance <= 0) return false;
+    if (balance <= 0) {
+        throw "Error. Zero balance";
+    }
+
+    const spendTypes = await getTypes();
+    const isGiftCard = spendTypes.spendTypesMap[data.type].giftCard;
+    if (isGiftCard) {
+        const giftCard: GiftCard = spendTypes.giftCardsMap[data.type];
+
+        const bipToUsd = await getBipPrice();
+        const usdPrice = bipToUsd * (campaign.coinToBip || 1);
+        data.amount = giftCard.priceUsd / usdPrice + giftCard.priceUsd / usdPrice * 0.2;
+    }
 
     if (!data.amount) data.amount = balance;
 
-    if (campaign.balance < data.amount) return false;
+    if (campaign.balance < data.amount) {
+        throw "Error. Invalid balance";
+    }
 
     if (data.amount > balance) data.amount = balance;
 
@@ -181,20 +210,22 @@ export async function spend(walletId: string, data: PublicWalletSpendData) {
             fee += bipInCoin * 0.015 * data.payload.length;
         }
 
-        data.amount -= fee;
+        let amount = data.amount - fee;
 
         txHash = await sellCoins(walletKey, {
             coinFrom: campaign.coin,
             coinTo: process.env.CHAIN_COIN,
-            amount: data.amount,
+            amount: amount,
         }, campaign.coin);
 
-        if (!txHash) return false;
+        if (!txHash) {
+            throw "Error. Sell coins fail";
+        }
 
         const result = await sdk.estimateCoinSell({
             coinToSell: campaign.coin,
             coinToBuy: process.env.CHAIN_COIN,
-            valueToSell: data.amount.toString(),
+            valueToSell: amount.toString(),
         });
 
         const willGet = parseFloat(result.will_get);
@@ -217,13 +248,17 @@ export async function spend(walletId: string, data: PublicWalletSpendData) {
             fee += bipInCoin * 0.01 * data.payload.length;
         }
 
+        console.log("send amount: ", data.amount);
+
         txHash = await sendCoins(walletKey, {
             to: data.toAddress,
             amount: data.amount - fee,
             coin: campaign.coin,
         }, campaign.coin, data.payload);
 
-        if (!txHash) return false;
+        if (!txHash) {
+            throw "Error. Send coins fail";
+        }
     }
 
     if (!wallet.spendRecords) {
@@ -249,6 +284,17 @@ export async function spend(walletId: string, data: PublicWalletSpendData) {
     await saveCampaign(campaign);
     await saveWallet(wallet);
 
+    if (isGiftCard) {
+        const giftCard: GiftCard = spendTypes.giftCardsMap[data.type];
+        giftCard.userId = wallet.walletId;
+        giftCard.sellTime = Date.now();
+        await gift_card.save(giftCard);
+        return {
+            code: giftCard.code,
+            link: giftCard.link,
+        };
+    }
+
     return true;
 }
 
@@ -271,4 +317,3 @@ async function activateWallet(wallet: Wallet) {
         await saveWallet(wallet);
     }
 }
-

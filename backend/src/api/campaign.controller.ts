@@ -98,6 +98,7 @@ export class PublicCampaignController extends Controller {
         id: string,
         /** User ID */
         @Query() uid: string, @Request() req: any): Promise<PublicCampaign> {
+
         const userLocale = getUserLocaleRequest(req);
         const campaign = await db.getCampaignPublicById(id, userLocale);
 

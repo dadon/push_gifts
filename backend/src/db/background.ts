@@ -8,7 +8,7 @@ if (process.env.START_BLOCK) {
 }
 
 export async function getLastBlock(): Promise<number> {
-    const result = await rdb.get(rdb.buildKey("lastBlock"));
+    const result = await rdb.get(rdb.buildKey("lastBlock2"));
 
     if (result) {
         let num = parseInt(result);
@@ -21,7 +21,7 @@ export async function getLastBlock(): Promise<number> {
 }
 
 export async function setLastBlock(value: number) {
-    await rdb.set(rdb.buildKey("lastBlock"), value.toString());
+    await rdb.set(rdb.buildKey("lastBlock2"), value.toString());
 }
 
 export async function getCurrencyRate(): Promise<object> {

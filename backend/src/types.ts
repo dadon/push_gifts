@@ -1,6 +1,7 @@
 export interface MinterWallet {
     address: string;
     credentials: string;
+    balance?: object;
 }
 
 export enum CampaignType {
@@ -44,6 +45,11 @@ export interface Campaign {
      * Or just internal name of this campaign in case of mass type
      */
     name?: string;
+
+    /**
+     * Link to push-wallet
+     */
+    url?: string;
     /**
      * Your name or name of your brand/company
      */
@@ -88,6 +94,8 @@ export interface Campaign {
      * Campaign statistics
      */
     stat?: CampaignStat;
+
+    sendFrom?: CampaignSendFrom;
 }
 
 export interface CampaignEditableData {
@@ -131,12 +139,24 @@ export interface CampaignCreateData {
     /**
      * Settings of this campaign
      */
-    data?: CampaignEditableData
+    data?: CampaignEditableData;
+
+    balance?: number;
+    coin?: string;
+    sendFrom?: CampaignSendFrom;
+}
+
+export interface CampaignSendFrom {
+    address: string;
+    amount: number;
+    txHash?: string;
 }
 
 export interface SimpleResponse {
     success: boolean;
     error?: string;
+    data?: any;
+
 }
 
 
@@ -190,24 +210,6 @@ export interface Wallet {
     spendRecords?: PushWalletSpend[];
 }
 
-export interface CampaignDeposit {
-    /**
-     * ID of the campaign
-     */
-    campaignId: string;
-    txHash?: string;
-    txFrom?: string;
-    /**
-     * Amount of deposited Minter coins
-     */
-    amount: number;
-    /**
-     * Deposited Minter coins ticker
-     */
-    coin: string;
-    created: number;
-}
-
 export interface PushWalletSpend {
     /**
      * Minter address where user sent or spent the money
@@ -234,6 +236,7 @@ export interface PushWalletSpend {
 export interface BlockHandler {
     onBlock: Function;
     init?: Function;
+    dispose?: Function;
 }
 
 export interface CoinConvertRecord {
@@ -276,6 +279,7 @@ export interface PriceInfo {
      * Price for 1 Minter coin in currency
      */
     price: number;
+    priceUsd?: number;
 }
 
 export interface PublicCampaign {
@@ -358,4 +362,30 @@ export interface PublicWalletSpendData {
     /** Flag that indicate necessity to convert coins into another type of Minter coins */
     convert?: boolean;
     password?: string;
+}
+
+export interface SpendType {
+    type: string;
+    spendTitle?: string;
+    spendAction?: string;
+    needPhone?: boolean;
+    needAddress?: boolean;
+    imageLocalization?: boolean;
+    giftCard?: boolean;
+    hasLink?: boolean;
+    priceUsd?: number;
+    address?: string;
+    group?: string;
+}
+
+export interface GiftCard {
+    id?: string;
+    spendType: string;
+    code: string;
+    priceUsd: number;
+    userId?: string;
+    createTime?: number;
+    sellTime?: number;
+    link?: string;
+    group?: string;
 }

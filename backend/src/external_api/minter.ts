@@ -3,6 +3,7 @@ import Big from "big.js";
 import { Minter, SendTxParams, BuyTxParams, SellTxParams } from "minter-js-sdk";
 
 import { ServiceError } from "../utils/cutom_error";
+import * as https from "https";
 
 
 export const sdk = new Minter({
@@ -20,6 +21,9 @@ async function get(endpoint: string): Promise<object> {
     try {
         const apiResponse = await axios.get(url, {
             timeout: 5000,
+            httpsAgent: new https.Agent({
+                rejectUnauthorized: false
+            })
         });
 
         return apiResponse.data.result;
@@ -142,7 +146,7 @@ export async function sendCoins(privateKey: string, coinToSend: CoinToSend, feeC
         chainId: process.env.CHAIN_ID,
         privateKey: privateKey,
         address: coinToSend.to,
-        amount: coinToSend.amount.toString(),
+        amount: coinToSend.amount.toFixed(4),
         coinSymbol: coinToSend.coin || process.env.MAIN_COIN_SYMBOL,
         feeCoinSymbol: feeCoin || coinToSend.coin,
     };

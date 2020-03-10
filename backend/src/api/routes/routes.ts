@@ -31,6 +31,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CampaignSendFrom": {
+        "dataType": "refObject",
+        "properties": {
+            "address": { "dataType": "string", "required": true },
+            "amount": { "dataType": "double", "required": true },
+            "txHash": { "dataType": "string" },
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Campaign": {
         "dataType": "refObject",
         "properties": {
@@ -42,6 +52,7 @@ const models: TsoaRoute.Models = {
             "coin": { "dataType": "string" },
             "coinToBip": { "dataType": "double" },
             "name": { "dataType": "string" },
+            "url": { "dataType": "string" },
             "brandName": { "dataType": "string" },
             "password": { "dataType": "string" },
             "passwordHint": { "dataType": "string" },
@@ -53,6 +64,7 @@ const models: TsoaRoute.Models = {
             "runOutOfGifts": { "dataType": "boolean" },
             "waitForRefill": { "dataType": "boolean" },
             "stat": { "ref": "CampaignStat" },
+            "sendFrom": { "ref": "CampaignSendFrom" },
         },
         "additionalProperties": true,
     },
@@ -76,6 +88,9 @@ const models: TsoaRoute.Models = {
             "type": { "ref": "CampaignType", "required": true },
             "uid": { "dataType": "string" },
             "data": { "ref": "CampaignEditableData" },
+            "balance": { "dataType": "double" },
+            "coin": { "dataType": "string" },
+            "sendFrom": { "ref": "CampaignSendFrom" },
         },
         "additionalProperties": true,
     },
@@ -85,6 +100,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "success": { "dataType": "boolean", "required": true },
             "error": { "dataType": "string" },
+            "data": { "dataType": "any" },
         },
         "additionalProperties": true,
     },
@@ -135,6 +151,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "currency": { "dataType": "string", "required": true },
             "price": { "dataType": "double", "required": true },
+            "priceUsd": { "dataType": "double" },
         },
         "additionalProperties": true,
     },
@@ -193,6 +210,24 @@ const models: TsoaRoute.Models = {
             "phone": { "dataType": "string" },
             "localeInfo": { "ref": "LocaleInfo" },
             "navigator": { "dataType": "array", "array": { "dataType": "string" } },
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SpendType": {
+        "dataType": "refObject",
+        "properties": {
+            "type": { "dataType": "string", "required": true },
+            "spendTitle": { "dataType": "string" },
+            "spendAction": { "dataType": "string" },
+            "needPhone": { "dataType": "boolean" },
+            "needAddress": { "dataType": "boolean" },
+            "imageLocalization": { "dataType": "boolean" },
+            "giftCard": { "dataType": "boolean" },
+            "hasLink": { "dataType": "boolean" },
+            "priceUsd": { "dataType": "double" },
+            "address": { "dataType": "string" },
+            "group": { "dataType": "string" },
         },
         "additionalProperties": true,
     },
@@ -435,10 +470,32 @@ export function RegisterRoutes(app: express.Express) {
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.get('/wallet/spend-types',
+        function(request: any, response: any, next: any) {
+            const args = {
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new WalletController();
+
+
+            const promise = controller.spendTypes.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/wallet/:id',
         function(request: any, response: any, next: any) {
             const args = {
                 id: { "in": "path", "name": "id", "required": true, "dataType": "string" },
+                req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

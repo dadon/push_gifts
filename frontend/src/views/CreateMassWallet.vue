@@ -108,7 +108,6 @@
 
 <script>
     import { mapState } from "vuex";
-    import { prepareLink } from "minter-js-sdk/dist/index.min";
 
     import * as api from "@/api";
     import ButtonAsync from "@/components/ButtonAsync";
@@ -125,7 +124,7 @@
     import BackButton from "@/components/BackButton";
     import SharingBuyBlock from "@/components/SharingBuyBlock";
     import ShareDesktop from "@/components/ShareDesktop";
-    import { format, compareAsc } from "date-fns";
+    import { format } from "date-fns";
 
     export default {
         components: {
@@ -201,29 +200,6 @@
 
             shareLink() {
                 return `${process.env.VUE_APP_SITE}/c-${this.campaign.campaignPublicId}`;
-            },
-
-            buyDeepLink() {
-                let linkHost = undefined;
-
-                if (isMobile()) {
-                    linkHost = "minter:///";
-                }
-
-                const txParams = {
-                    type: "0x01",
-                    data: {
-                        to: this.campaign.address,
-                        // value: "0xc0",
-                        coin: "",
-                    },
-                };
-
-                if (this.campaign.coin) {
-                    txParams.data["coin"] = this.campaign.coin;
-                }
-
-                return prepareLink(txParams, linkHost);
             },
 
             ...mapState([

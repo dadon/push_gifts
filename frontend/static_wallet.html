@@ -1,0 +1,72 @@
+<div id="loader" class="loading">Loading</div>
+<div id="content" class="content" style="display: none">
+    <div>wallet: <span id="address"></span></div>
+    <div>balance: <span id="balance"></span></div>
+    <div id="send-block" style="display: none">
+        <input id="to-address" type="text" placeholder="enter address to send"/>
+        <button id="send">send</button>
+    </div>
+</div>
+<div id="result" style="display: none">
+    Success!
+    <a id="result-link"></a>
+</div>
+<script src="https://unpkg.com/minter-js-sdk"></script>
+<script src="https://unpkg.com/minterjs-wallet"></script>
+<script>
+    const seed = "expose scorpion lawsuit priority april music border poet wait predict little pelican";
+    const nodeUrl = "https://api.mscan.dev/cbdbda78-c978-53f8-ae6d-7fb9a10eca76/node";
+    const coin = "BIP";
+
+    const wallet = minterWallet.walletFromMnemonic(seed);
+    const content = document.getElementById("content");
+    const loader = document.getElementById("loader");
+    const address = document.getElementById("address");
+    const balance = document.getElementById("balance");
+    const sendBlock = document.getElementById("send-block");
+    const sendBtn = document.getElementById("send");
+    const toAddress = document.getElementById("to-address");
+    const result = document.getElementById("result");
+    const resultLink = document.getElementById("result-link");
+    let value = 0;
+
+    sendBtn.onclick = async function send() {
+        const sdk = new minterSDK.Minter({
+            apiType: "node",
+            baseURL: nodeUrl,
+        });
+
+        const txHash = await sdk.postTx(minterSDK.SendTxParams({
+            chainId: 1,
+            privateKey: wallet.getPrivateKeyString(),
+            address: toAddress.value,
+            amount: value - 0.01,
+            coinSymbol: coin,
+            feeCoinSymbol: coin,
+            message: ""
+        }));
+
+        if (txHash) {
+            const link = "https://explorer.minter.network/transactions/" + txHash;
+            resultLink.innerText = link;
+            resultLink.href = link;
+            result.style.display = "block";
+            content.style.display = "none";
+        }
+    };
+
+    address.innerText = wallet.getAddressString();
+    balance.innerText = "Loading";
+    loader.style.display = "none";
+    content.style.display = "block";
+
+    (async () => {
+        const response = await fetch(`${nodeUrl}/address?address=${wallet.getAddressString()}`);
+        const data = await response.json();
+        value = parseFloat(data["result"]["balance"][coin]) / Math.pow(10, 18);
+        balance.innerText = value + " " + coin;
+        if (value > 0) {
+            sendBlock.style.display = "block";
+        }
+    })();
+</script>

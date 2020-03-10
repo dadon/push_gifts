@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: push-gifts-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: push-gifts-frontend
+  template:
+    metadata:
+      labels:
+        app: push-gifts-frontend
+    spec:
+      containers:
+        - name: push-gifts-frontend
+          image: IMAGE_URL
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "25m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: push-gifts-frontend
+spec:
+  type: NodePort
+  selector:
+    app: push-gifts-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: push-gifts-frontend-ingress
+  annotations:
+    networking.gke.io/managed-certificates: pushgifts-dev-certs
+spec:
+  backend:
+    serviceName: push-gifts-frontend
+    servicePort: 80

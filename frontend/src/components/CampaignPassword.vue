@@ -9,12 +9,11 @@
             </div>
 
             <section v-if="!campaign.runOutOfGifts">
+                <div class="balance-block-bg"></div>
                 <div class="balance-block">
-                    <div class="title">You have found a gift</div>
-                    <div class="balance">{{ campaign.rewardPerUser }} {{ campaign.coin }}</div>
+                    <div class="title">{{ _("wallet_title") }}</div>
+                    <div class="balance">{{ balance }} {{ campaign.coin }}</div>
                     <div class="balance-currency" v-if="localPrice">~{{ localPrice.price }} {{ localPrice.currency }}
-                    </div>
-                    <div class="title" v-if="campaign.brandName">from {{ campaign.brandName }}
                     </div>
                 </div>
 
@@ -28,19 +27,19 @@
                     </section>
 
                     <section v-if="!successMessage">
-                        <label class="login-label">Enter password</label>
+                        <label class="login-label">{{ _("password_label") }}</label>
                         <input type="text" placeholder="" v-model="password">
 
                         <div class="spend-error-message" v-if="errorMessage">{{ errorMessage }}</div>
 
                         <div class="content-actions">
-                            <ButtonAsync label="Claim gift" style-name="login-btn" :handler="send"/>
+                            <ButtonAsync :label="_('button_claim')" style-name="login-btn" :handler="send"/>
                         </div>
                     </section>
                 </div>
 
                 <div class="spend">
-                    <div class="title">You will be able to spend them on phone refills and gift cards</div>
+                    <div class="title">{{ _("spend_tip") }}</div>
                     <button class="spend-card no-active"
                             v-for="item in spendTypes"
                             :style="{ background: `url(/img/logo/${item.id}.png?r=${rnd}) no-repeat center center`, backgroundSize: 'cover' }"
@@ -59,10 +58,12 @@
     import { mapState } from "vuex";
     import { sha256 } from "@/utils/dom";
     import { sleep } from "@/utils";
+    import localization from "@/utils/localization";
 
     export default {
         props: {
             campaign: Object,
+            user: Object,
         },
 
         components: {
@@ -82,11 +83,19 @@
         },
 
         computed: {
-            localPrice() {
-                if (!this.campaign || !this.campaign.priceInfo) return null;
+            balance() {
+                if (!this.user || !this.user.balance) return 0;
 
+                let result = parseFloat(this.user.balance).toFixed(2);
+                result = result.replace(".00", "");
+                return result;
+            },
+
+
+            localPrice() {
+                if (!this.user || !this.campaign || !this.campaign.priceInfo) return null;
                 return {
-                    price: (this.campaign.rewardPerUser * this.campaign.priceInfo.price).toFixed(2),
+                    price: (this.user.balance * this.campaign.priceInfo.price).toFixed(2),
                     currency: this.campaign.priceInfo.currency,
                 };
             },
@@ -103,14 +112,14 @@
 
 
                 if (!this.password || !this.password.length) {
-                    this.errorMessage = "Please enter something";
+                    this.errorMessage = localization.get("password_error_empty");
                     return;
                 }
 
                 const hash = await sha256(this.password);
 
                 if (this.currentUser.passwordHash !== hash) {
-                    this.errorMessage = "Invalid password";
+                    this.errorMessage = localization.get("password_error_invalid");
                     return;
                 }
 

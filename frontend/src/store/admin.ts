@@ -35,25 +35,25 @@ export const Mutations = {
 };
 
 export const Actions = {
-    async [Types.createCampaign](context: any, type: string) {
+    async createCampaign(context: any, type: string) {
         const campaign = await api.post("campaign", { type });
 
         context.commit(Types.currentCampaign, campaign);
         router.push(`/create/${type}/${campaign.campaignId}`);
     },
 
-    async [Types.loadCampaign](context: any, campaignId: string) {
+    async loadCampaign(context: any, campaignId: string) {
         const campaign = await api.get(`campaign/${campaignId}`);
         context.commit(Types.currentCampaign, campaign);
     },
 
-    async [Types.saveCampaign](context: any, options: any) {
+    async saveCampaign(context: any, options: any) {
         console.log("Types.saveCampaign", Types.saveCampaign);
         await api.put(`campaign/${options.campaignId}`, options.data);
         await context.dispatch(Types.loadCampaign, options.campaignId);
     },
 
-    async [Types.loadCampaigns](context: any) {
+    async loadCampaigns(context: any) {
         const userId = getUserId();
         const campaigns = await api.get(`campaigns/${userId}`);
 
@@ -62,7 +62,7 @@ export const Actions = {
         }
     },
 
-    [Types.showRefill](context: any, value: boolean) {
+    showRefill(context: any, value: boolean) {
         context.commit(Types.refillMode, value);
     },
 };

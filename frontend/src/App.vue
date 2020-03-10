@@ -1,21 +1,21 @@
 <template>
-    <div id="app" class="white">
-        <div class="page-container">
-            <div class="content-wrap">
+    <div id="app">
+<!--        <div class="page-container">-->
+<!--            <div class="content-wrap">-->
                 <router-view/>
-            </div>
-            <footer class="footer">
-
-                <transition name="fade">
-                <div class="github-link-wrapper" v-if="footerVisible">
-                    <div class="github-link">
-                        <a href="https://github.com/dadon/push_gifts" target="_blank"><img
-                                src="./assets/GitHub-Mark-120px-plus.png"></a>
-                    </div>
-                </div>
-                </transition>
-            </footer>
-        </div>
+<!--            </div>-->
+<!--            <footer class="footer">-->
+<!---->
+<!--                <transition name="fade">-->
+<!--                <div class="github-link-wrapper" v-if="footerVisible">-->
+<!--                    <div class="github-link">-->
+<!--                        <a href="https://github.com/dadon/push_gifts" target="_blank"><img-->
+<!--                                src="./assets/GitHub-Mark-120px-plus.png"></a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                </transition>-->
+<!--            </footer>-->
+<!--        </div>-->
     </div>
 </template>
 

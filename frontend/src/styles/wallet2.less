@@ -20,34 +20,64 @@
 
 
 //.white {
-  @fontColor: #000;
-  @mainColor: #E1E6EC;
-  @boxShadow: 8px 8px 20px 0px rgba(32, 32, 34, 0.2), -8px -8px 20px 0px rgba(255, 255, 255, 0.2);
-  @textShadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
-  @textShadowHover: 0px 0px 5px rgba(0, 0, 0, 0.4);
-  @buttonBorder: 1px solid rgba(255, 255, 255, 0.7);
-
-  @inputBg: #cfd6dd;
-  @inputColor: #000;
-  @inputPlaceholderColor: rgba(0, 0, 0, 0.4);
-  @inputBorder: 1px solid #d8dde3;
-
-  @inputFocusBg: #dce3ea;
-  @inputFocusBorder:  1px solid #eaedf1;
-
-  @inputFocusBoxShadow: 0px 0px 20px 0px rgba(255, 255, 255, 0.9);
- @tableBg: rgba(0, 0, 0, 0.1);
+//@fontColor: #000;
+//@mainColor: #E1E6EC;
+//@boxShadow: 8px 8px 20px 0px rgba(32, 32, 34, 0.2), -8px -8px 20px 0px rgba(255, 255, 255, 0.2);
+//@textShadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+//@textShadowHover: 0px 0px 5px rgba(0, 0, 0, 0.4);
+//@buttonBorder: 1px solid rgba(255, 255, 255, 0.7);
+//
+//@inputBg: #cfd6dd;
+//@inputColor: #000;
+//@inputPlaceholderColor: rgba(0, 0, 0, 0.4);
+//@inputBorder: 1px solid #d8dde3;
+//
+//@inputFocusBg: #dce3ea;
+//@inputFocusBorder: 1px solid #eaedf1;
+//
+//@inputFocusBoxShadow: 0px 0px 20px 0px rgba(255, 255, 255, 0.9);
+//@tableBg: rgba(0, 0, 0, 0.1);
 
 //}
+// dark
+@fontColor: #958e8e;
+@mainColor: #313131;
+@boxShadow: none;
+@textShadow: none;
+@textShadowHover: none;
+@buttonBorder: 4px solid #474848;
 
+@inputBg: #fff;
+@inputColor: #000;
+@inputPlaceholderColor: rgba(0, 0, 0, 0.4);
+@inputBorder: 1px solid #d8dde3;
 
+@inputFocusBg: #fff;
+@inputFocusBorder: 2px solid #f7f7f7;
+
+@inputBoxShadow: inset 0px 2px 37px 0px rgba(0, 0, 0, 0.25);
+@inputFocusBoxShadow: inset 0px 2px 37px 0px rgba(0, 0, 0, 0.25), 0px 0px 20px 0px hsla(0, 0%, 100%, 0.25);
+
+@tableBg: rgba(0, 0, 0, 0.1);
+
+@yellow: #fac758;
+
+.hvr-grow-normal() {
+  transform: perspective(1px) translateZ(0);
+  transition-duration: 0.6s;
+  transition-property: transform;
+}
+
+.hvr-grow-hover() {
+  transform: scaleX(1.05);
+}
 
 .noselect() {
   user-select: none;
 }
 
 html, * {
-  font-family: "Calibri", serif;
+  font-family: 'Inter', sans-serif;
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
 }
@@ -55,16 +85,18 @@ html, * {
 body {
   background-color: @mainColor;
   color: @fontColor;
+  overflow-x: hidden;
 }
 
 button:focus, input:focus, textarea:focus, select:focus {
   outline: none;
 }
 
-input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input:not([type="button"]):not([type="submit"]):not([type="reset"]):focus, textarea:hover, textarea:focus, select:hover, select:focus {
+input:not([type="button"]):not([type="radio"]):not([type="submit"]):not([type="reset"]):hover, input:not([type="button"]):not([type="radio"]):not([type="submit"]):not([type="reset"]):focus, textarea:hover, textarea:focus, select:hover, select:focus {
   //border-color: rgba(255, 255, 255, 0.5);
   border: @inputFocusBorder;
   box-shadow: @inputFocusBoxShadow;
+
 }
 
 @footerHeight: 100px;
@@ -101,9 +133,9 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
   border-radius: 20px;
   background: @mainColor;
   box-shadow: @boxShadow;
-  border: @buttonBorder;
-  border-bottom-width: 0;
-  border-right-width: 0;
+  border: 2px solid #474848;
+  //border-bottom-width: 0;
+  //border-right-width: 0;
 }
 
 .content-block label {
@@ -111,17 +143,18 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
   font-weight: bold;
 }
 
-.content-block input {
+.content-block input[type="text"] {
   display: block;
   width: 97%;
   height: 55px;
 
   color: @inputColor;
   background-color: @inputBg;
-  border: @inputBorder;
+  border: 2px solid #968f8f;
+  box-shadow: @inputBoxShadow;
 
   border-radius: 8px;
-  font-size: 18px;
+  font-size: 15px;
   margin-bottom: 8px;
   transition: border-color 200ms;
 }
@@ -130,9 +163,9 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
   color: @inputPlaceholderColor;
 }
 
-.content-block input:focus {
+.content-block input[type="text"]:focus {
   background-color: @inputFocusBg;
-  border: @inputFocusBorder;
+  border: 2px solid #f7f7f7;
   box-shadow: @inputFocusBoxShadow;
 }
 
@@ -143,76 +176,100 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 }
 
 .button, a.button {
-  height: 80px;
+  //height: 80px;
 
-  border-radius: 20px;
+  border-radius: 40px;
 
-  background: @mainColor;
-  box-shadow: @boxShadow;
-  border: @buttonBorder;
-  border-bottom-width: 0;
-  border-right-width: 0;
+  background: #fac758;
+  //box-shadow: @boxShadow;
+  //border-bottom-width: 0;
+  //border-right-width: 0;
 
-  text-shadow: @textShadow;
-  color: @fontColor;
+  text-shadow: 0px 0px 30px #f0582b;
+
+  color: #6e3b3b;
   font-size: 20px;
+  font-weight: bold;
   text-transform: uppercase;
 
-  transition: box-shadow 200ms, text-shadow 200ms;
+  //line-height: 20px;
+  //padding: 0px;
+  border: @buttonBorder;
+  border-color: transparent;
 
+  .hvr-grow-normal();
   .noselect();
 }
 
 .button:hover, a.button:hover {
-  background: @mainColor;
-  border: @buttonBorder;
-  border-bottom-width: 0;
-  border-right-width: 0;
-  text-shadow: @textShadowHover;
+  .hvr-grow-hover();
+  background: #fac758;
+  //border: @buttonBorder;
+  //border-bottom-width: 0;
+  //border-right-width: 0;
+  //text-shadow: @textShadowHover;
   //transform: scale(1.1);
   //box-shadow: 8px 8px 20px 0px rgba(36, 41, 66, 0.8), -8px -8px 20px 0px rgba(145, 158, 241, 0.8);
 }
 
 .button:focus, a.button:focus, .button.active {
-  background: @mainColor;
-  border: @buttonBorder;
-  text-shadow: @textShadow;
-  border-bottom-width: 0;
-  border-right-width: 0;
+  //background: @mainColor;
+  //border: @buttonBorder;
+  //text-shadow: @textShadow;
+  //border-bottom-width: 0;
+  //border-right-width: 0;
 }
 
 //.button:focus, .button:active, a.button:active, a.button:focus, .button.active {
 .button:active, a.button:active, .button.active {
-  background: @mainColor;
-  box-shadow: none;
-  border-color: transparent;
+
 }
 
 .balance-block {
+  position: relative;
   text-align: center;
-  margin: 20px auto;
+  margin: 40px auto 70px;
+  z-index: 2;
+  .noselect();
 
   .title {
     font-size: 30px;
+    color: white;
   }
 
   .balance {
     font-size: 40px;
-    font-weight: bold;
+    //font-weight: bold;
     text-shadow: @textShadow;
+    color: #facc5a;
+    margin-top: -10px;
   }
 
   .balance-currency {
-    font-size: 20px;
-    color: #a6a6ac;
+    font-size: 30px;
+    color: #838383;
     font-weight: bold;
+    margin-top: -10px;
   }
 }
 
-.spend {
+@balanceBgWidth: 2286px;
+@balanceBgMobileWidth: 1500px;
+.balance-block-bg {
+  position: absolute;
+  z-index: 1;
+  width: @balanceBgWidth;
+  height: @balanceBgWidth;
+  top: (@balanceBgWidth - 206px) * -1;
+  left: 50%;
+  margin-left: -(@balanceBgWidth) / 2;
+  background-color: #474848;
+  border-radius: 50%;
+}
 
+.spend {
   text-align: center;
-  max-width: 368px;
+  //max-width: 368px;
   margin: 20px auto;
 
   .title {
@@ -223,26 +280,23 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 
   .spend-card {
     display: inline-block;
-    margin: 16px 0px;
+    //margin: 8px 0px;
     width: 100%;
-    max-width: 368px;
-    height: 190px;
+    max-width: 338px;
+    height: 160px;
 
     border-radius: 20px;
 
-    box-shadow: @boxShadow;
-    border: 1px solid rgba(123, 140, 219, 0.3);
-    border-bottom-width: 0;
-    border-right-width: 0;
+    border: 2px solid #424242;
     box-sizing: border-box;
 
-    transition: box-shadow 200ms;
+    //transition: box-shadow 200ms;
     .noselect();
   }
 
   .spend-card:hover, .spend-card:focus, .spend-card:active {
-    box-shadow: none;
-    border-color: transparent;
+    //box-shadow: none;
+    //border-color: transparent;
   }
 }
 
@@ -434,7 +488,7 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 
 }
 
-.address-label > *, .address-prefix > *{
+.address-label > *, .address-prefix > * {
   font-family: monospace;
   text-transform: none;
 }
@@ -486,8 +540,8 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 }
 
 .login-btn {
-  font-size: 50px;
-  padding: 0px 20px;
+  font-size: 30px;
+  padding: 10px 20px;
   height: auto;
   //line-height: 50px;
   //height: 40px;
@@ -505,9 +559,18 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 }
 
 .spend-success-message {
-  padding: 16px;
-  font-size: 25px;
+  //padding: 16px;
+  font-size: 20px;
+  color: white;
   text-align: center;
+}
+
+.wallet-layout {
+  position: relative;
+  margin: auto;
+  padding: 0;
+  overflow-x: hidden;
+  max-width: 716px;
 }
 
 .tabs {
@@ -517,8 +580,9 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 }
 
 .btn-tab {
-  font-size: 50px;
+  //font-size: 50px;
   height: auto;
+  margin: 0px;
 }
 
 .btn-tab + .btn-tab {
@@ -527,22 +591,27 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 
 .back-btn {
   position: relative;
-  font-size: 30px;
-  width: 120px;
+  //font-size: 30px;
+  //width: 150px;
   height: 60px;
-  padding: 5px;
+  padding: 0px;
+  padding-left: 44px;
+  padding-right: 10px;
   margin: 10px 0 20px;
+  line-height: 20px;
+  vertical-align: middle;
 
   i {
     position: absolute;
-    top: 10px;
-    left: 4px;
+    top: 8px;
+    left: 10px;
   }
 
   span {
-    position: absolute;
-    top: 5px;
-    left: 38px;
+
+    //position: absolute;
+    margin-top: -15px;
+    //left: 38px;
   }
 }
 
@@ -559,7 +628,7 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 }
 
 .instant-send-btn {
-  font-size: 30px;
+  //font-size: 30px;
   height: auto;
   padding: 10px 20px;
 }
@@ -574,6 +643,7 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 .bipto {
   //padding-top: 16px;
 }
+
 .bipto img {
   border-radius: 20px;
   margin-top: 16px;
@@ -582,15 +652,19 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
 .spend-title {
   font-size: 20px;
   text-align: center;
-  font-weight: bold;
+  color: white;
+  margin-bottom: 20px;
 }
 
 .spend-error-message {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
   padding-left: 10px;
+  padding-top: 10px;
   color: #FF4F4F;
-  text-align: left;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .push-wallet-link {
@@ -633,6 +707,7 @@ input:not([type="button"]):not([type="submit"]):not([type="reset"]):hover, input
     display: table-cell;
     width: 30%;
   }
+
   .td-middle {
     display: table-cell;
     width: 40%;
@@ -790,6 +865,7 @@ div.share-desktop-qr {
 .qr-wrapper {
   //margin-top: 16px;
 }
+
 .landing-wrapper {
 
 }
@@ -859,6 +935,15 @@ img.landing {
   }
 }
 
+@media screen and (max-width: 414px) {
+  .balance-block-bg {
+    width: @balanceBgMobileWidth;
+    height: @balanceBgMobileWidth;
+    top: (@balanceBgMobileWidth - 206px) * -1;
+    margin-left: -(@balanceBgMobileWidth) / 2;
+  }
+}
+
 @media screen and (max-width: 320px) {
   .campaign-buy-btn-wrapper + .campaign-buy-btn-wrapper {
     margin-left: 10px;
@@ -880,12 +965,266 @@ img.landing {
   .btn-tab + .btn-tab {
     margin-left: 10px;
   }
+
+
 }
+
+//.back-btn path {
+//  stroke: white;
+//}
+//
+//.white .back-btn path {
+//  stroke: black;
+//}
 
 .back-btn path {
-  stroke: white;
+  stroke: #6e3b3b;
 }
 
-.white .back-btn path {
-  stroke: black;
+
+.list-enter-active, .list-leave-active {
+  transition: opacity 1s;
+}
+
+.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+.spend-wrapper {
+  max-width: 414px;
+  margin: auto;
+
+  .balance {
+    position: relative;
+    float: right;
+    padding: 10px;
+    font-size: 20px;
+    //font-weight: bold;
+    text-shadow: @textShadow;
+    color: #facc5a;
+    height: 60px;
+    line-height: 60px;
+    //margin-top: 10px;
+  }
+}
+
+
+.landing-button, a.landing-button {
+  //height: 80px;
+  display: inline-block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  border-radius: 20px;
+
+  background: #fac758;
+  //box-shadow: @boxShadow;
+  //border-bottom-width: 0;
+  //border-right-width: 0;
+
+  text-shadow: 0px 0px 30px #f0582b;
+
+  color: #6e3b3b;
+  font-size: 20px;
+  line-height: 20px;
+  font-weight: bold;
+  text-transform: none;
+
+  //line-height: 20px;
+  //padding: 0px;
+
+  border-color: transparent;
+}
+
+.landing-button:hover, .landing-button:focus {
+  background: #fac758;
+}
+
+.landing-button {
+  .wrap {
+    pointer-events: none;
+  }
+}
+
+.select-spend {
+  width: 90%;
+
+  max-width: 400px;
+  padding: 0px;
+  height: 60px;
+  text-transform: none;
+
+  .wrap {
+    position: relative;
+    padding-left: 70px;
+    height: 60px;
+    line-height: 54px;
+    text-align: left;
+
+    font-size: 20px;
+  }
+
+  .icon {
+    position: absolute;
+    display: block;
+    top: -4px;
+    left: 0px;
+    width: 70px;
+    height: 60px;
+  }
+
+  .label {
+    padding-left: 70px;
+  }
+}
+
+@media screen and (min-width: 400px) {
+  .select-spend {
+    .wrap {
+      margin-left: 5%;
+    }
+  }
+}
+
+.radio-parent {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+//.radio-container {
+//  display: block;
+//  position: relative;
+//  padding-left: 35px;
+//  margin-bottom: 12px;
+//  cursor: pointer;
+//  font-size: 22px;
+//  -webkit-user-select: none;
+//  -moz-user-select: none;
+//  -ms-user-select: none;
+//  user-select: none;
+//}
+//
+///* Hide the browser's default radio button */
+//.radio-container input {
+//  position: absolute;
+//  opacity: 0;
+//  cursor: pointer;
+//}
+//
+///* Create a custom radio button */
+//.checkmark {
+//  position: absolute;
+//  top: 0;
+//  left: 0;
+//  height: 25px;
+//  width: 25px;
+//  background-color: #eee;
+//  border-radius: 50%;
+//}
+//
+///* On mouse-over, add a grey background color */
+//.radio-container:hover input ~ .checkmark {
+//  background-color: #ccc;
+//}
+//
+///* When the radio button is checked, add a blue background */
+//.radio-container input:checked ~ .checkmark {
+//  background-color: #2196F3;
+//}
+//
+///* Create the indicator (the dot/circle - hidden when not checked) */
+//.checkmark:after {
+//  content: "";
+//  position: absolute;
+//  display: none;
+//}
+//
+///* Show the indicator (dot/circle) when checked */
+//.radio-container input:checked ~ .checkmark:after {
+//  display: block;
+//}
+//
+///* Style the indicator (dot/circle) */
+//.radio-container .checkmark:after {
+//  top: 9px;
+//  left: 9px;
+//  width: 8px;
+//  height: 8px;
+//  border-radius: 50%;
+//  background: white;
+//}
+@media screen and (max-width: 320px) {
+
+
+  .select-spend {
+
+    font-size: 16px;
+
+    .wrap {
+      font-size: 16px;
+    }
+  }
+}
+
+.gift-code {
+  font-size: 20px;
+  text-align: center;
+  margin: 20px auto;
+  color: #fac758;
+  position: relative;
+}
+
+.copy-button {
+  top: -4px;
+  right: 10px;
+  position: absolute;
+  display: block;
+}
+
+input[type=text] {
+  /* Remove First */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  /* Then Style */
+  //border-radius: 15px;
+  //border: 1px dashed #BBB;
+  //padding: 10px;
+  //line-height: 20px;
+  //text-align: center;
+  background: transparent;
+  outline: none;
+}
+
+input[type="radio"]{
+  display: none;
+}
+
+@radioSize: 20px;
+input[type="radio"] + label span {
+  display: inline-block;
+  width:@radioSize;
+  height: @radioSize;
+  background: transparent;
+  vertical-align: middle;
+
+  border: 2px solid @yellow;
+  border-radius: 50%;
+  padding: 4px;
+  margin:0 5px;
+}
+
+input[type="radio"]:checked + label span {
+  width: @radioSize;
+  height: @radioSize;
+  background: @yellow;
+  background-clip: content-box;
+}
+
+.radio-label {
+  color: white;
+  font-weight: normal;
+  .noselect();
 }

@@ -7,7 +7,7 @@
                 <p>{{ campaign.address }}</p>
                 <img class="qr" v-bind:src="qrcode"/>
                 <div class="inline"><loader/></div>
-                <div >
+                <div>
                     <button class="instant-send-btn cancel" @click="hide">return</button>
                 </div>
             </div>

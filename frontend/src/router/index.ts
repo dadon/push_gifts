@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 import Home from "../views/Wallets.vue";
-import AdminLanding from "../views/AdminLanding.vue";
+import Landing from "../views/Landing.vue";
 import CreateMassWallet from "../views/CreateMassWallet.vue";
 import CreateSingleWallet from "../views/CreateSingleWallet.vue";
 import CampaignSignUp from "../views/CampaignSignUp.vue";
@@ -17,7 +17,7 @@ const routes = [
     {
         path: "/",
         name: "home",
-        component: AdminLanding,
+        component: Landing,
     },
 
     {

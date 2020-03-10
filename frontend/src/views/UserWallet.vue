@@ -2,76 +2,41 @@
     <wallet-layout>
         <loader v-if="!currentUser"/>
 
-        <CampaignPassword v-if="isLocked" :campaign="campaign" />
+        <CampaignPassword v-if="isLocked" :campaign="campaign" :user="currentUser"/>
+
         <div class="row" v-if="!isLocked">
-            <div class="col-sm-12 col-md-8 col-md-offset-2 col-lg-4 col-lg-offset-4 campaign-admin" v-if="currentUser">
-
-<!--                <transition name="fade">-->
-                    <back-button :handler="spendBack" v-if="currentUser && currentSpend"/>
-<!--                </transition>-->
-
-                <div class="intro runout-of-gifts" v-if="isRunOutOfGifts">
-                    All gifts <span v-if="currentUserCampaign.brandName">from {{ currentUserCampaign.brandName }}</span>
-                    are already claimed
-                </div>
-
-<!--                <transition name="fade" mode="out-in">-->
-                    <section v-if="!isRunOutOfGifts && !currentSpend">
+            <div class="col-sm-12" v-if="currentUser">
+                <transition name="fade" mode="out-in" appear>
+                    <div v-if="!isRunOutOfGifts && !currentSpend" key="one">
+                        <div class="balance-block-bg"></div>
                         <div class="balance-block">
-                            <div class="title" v-if="campaign.type == 'single' && campaign.name">Hey, {{ campaign.name }}</div>
-                            <div class="title">You have received</div>
+                            <div class="title">{{ _("wallet_title") }}</div>
                             <div class="balance">{{ balance }} {{ currentUserCampaign.coin }}</div>
                             <div class="balance-currency" v-if="localPrice">~{{ localPrice.price }} {{
                                 localPrice.currency
                                 }}
                             </div>
-                            <div class="title" v-if="currentUserCampaign.brandName">from {{
-                                currentUserCampaign.brandName }}
-                            </div>
                         </div>
-                    </section>
-<!--                </transition>-->
 
-<!--                <transition name="fade" mode="out-in">-->
-                    <wallet-spend-details :user="currentUser" :spend-type="currentSpend"
-                                          v-if="currentUser && currentSpend" @cancel="spendBack"/>
-<!--                </transition>-->
-
-                <section v-if="currentUser.balance > 0 && !currentSpend && !isRunOutOfGifts">
-                    <div class="tabs">
-                        <button class="button btn-tab" @click="showTab('spend')"
-                                :class="{ active: currentTab === 'spend'}">
-                            Spend
-                        </button>
-                        <button class="button btn-tab" @click="showTab('send')"
-                                :class="{ active: currentTab === 'send'}">
-                            Send
-                        </button>
-                    </div>
-
-<!--                    <transition name="fade">-->
-                        <div class="tab tab-spend" v-if="currentTab === 'spend'">
-                            <div class="spend">
-                                <button class="spend-card"
-                                        v-for="item in spendTypes"
-                                        :style="{ background: `url(/img/logo/${item.id}.png?r=${rnd}) no-repeat center center`, backgroundSize: 'cover' }"
-                                        :key="item.id" @click="spend(item)"></button>
-                            </div>
-                        </div>
-<!--                    </transition>-->
-                </section>
-
-<!--                <transition name="fade">-->
-                    <div class="tab tab-send" v-if="currentTab === 'send'">
-                        <div class="spend">
-                            <wallet-spend-details :user="currentUser" :spend-type="transferSpendType"/>
-                            <div class="tab-tip">If you haven't got any Minter wallet yet, you can create one in a few
-                                seconds: <a class="bipto"
-                                            href="https://www.bip.to" target="_blank" rel="noopener"><img
-                                        src="../assets/bipto_logo.png"/></a></div>
+                        <div class="spend" v-if="currentUser.balance > 0">
+                            <transition-group name="fade" tag="div" appear>
+                                <button class="button select-spend"
+                                        v-for="(item, i) in spendTypes"
+                                        :key="i" @click="spend(item)"><div class="wrap">
+                                    <div class="icon"><img  :src="spendIcon(item)"></div> {{ spendLabel(item) }}
+                                </div></button>
+                            </transition-group>
                         </div>
                     </div>
-<!--                </transition>-->
+
+                    <div v-if="currentUser && currentSpend" key="two" class="spend-wrapper">
+                        <back-button :handler="spendBack"/>
+                        <div class="balance">{{ balance }} {{ currentUserCampaign.coin }}</div>
+                        <wallet-spend-details :spend-type="currentSpend" @cancel="spendBack"
+                                              key="two"/>
+                    </div>
+                </transition>
+
             </div>
         </div>
     </wallet-layout>
@@ -79,7 +44,7 @@
 
 <script>
 
-    import { Types, SpendTypes } from "@/store/wallet";
+    import { Types } from "@/store/wallet";
     import { mapState } from "vuex";
     import { generateId, sleep } from "@/utils";
     import ButtonAsync from "@/components/ButtonAsync";
@@ -88,6 +53,7 @@
     import WalletSpendDetails from "@/components/WalletSpendDetails";
     import BackButton from "@/components/BackButton";
     import CampaignPassword from "@/components/CampaignPassword";
+    import localization from "@/utils/localization";
 
     export default {
         components: {
@@ -104,7 +70,7 @@
                 currentTab: "spend",
                 addressToSend: null,
                 spendLoading: false,
-                spendTypes: SpendTypes,
+                // spendTypes: [],
                 currentSpend: null,
                 rnd: Math.random(),
             };
@@ -138,9 +104,9 @@
             transferSpendType() {
                 return {
                     id: "send",
-                    title: "Do you want to send <span>{amount}</span> {coin}?",
+                    title: "spend_title_transfer",
                     needAddress: true,
-                    action: "Instant send",
+                    action: "spend_action_transfer",
                 };
             },
 
@@ -165,6 +131,7 @@
                 Types.currentUser,
                 Types.currentUserCampaign,
                 Types.walletPassword,
+                Types.spendTypes,
             ]),
         },
 
@@ -172,30 +139,54 @@
             async load() {
                 const userId = this.$route.params.userId;
 
-                await sleep(100);
+                await sleep(1000);
 
                 await Promise.all([
                     this.$store.dispatch(Types.loadUser, userId),
+                    this.$store.dispatch("loadSpendTypes", userId),
                 ]);
+
+                await this.showSpendItems();
             },
 
-            showTab(tab) {
-                this.currentTab = tab;
+            async showSpendItems() {
+                // this.spendTypes = [];
+                // for (let el of SpendTypes) {
+                //     // await sleep(100);
+                //     this.spendTypes.push(el);
+                // }
+            },
+
+            spendLabel(spendType) {
+                let key = spendType.type;
+                if (spendType.group) {
+                    key = spendType.group;
+                }
+                return localization.get("label_" + key);
+            },
+
+            spendIcon(spendType) {
+                let key = spendType.type;
+                if (spendType.group) {
+                    key = spendType.group;
+                }
+                return `/img/logo/${key}.png`;
             },
 
             spend(spendType) {
                 this.currentSpend = spendType;
+                // this.spendTypes = [];
             },
 
             spendBack() {
                 this.currentSpend = null;
+                this.showSpendItems();
             },
         },
 
-        mounted() {
+        async mounted() {
             this.load();
         },
-
     };
 </script>
 

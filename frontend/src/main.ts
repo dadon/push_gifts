@@ -5,23 +5,23 @@ import router from "./router";
 import store from "./store";
 import "mini.css/dist/mini-default.css";
 // import "./styles/index.less";
-// import Buefy from 'buefy';
-// import 'buefy/dist/buefy.css';
 
 import "./styles/wallet2.less";
 import "./styles/slider.less";
-import { sha256 } from "@/utils/dom";
-
-
-// const Fingerprint2 = require("fingerprintjs2");
-
-// import * as Fingerprint2 from "fingerprintjs2/fingerprint2.js";
+import localization from "@/utils/localization";
+import { getLocale } from "@/utils/dom";
 
 const FastClick = require("fastclick");
 
 Vue.config.productionTip = false;
 
-// Vue.use(Buefy);
+localization.setLanguage(getLocale());
+
+Vue.mixin({
+    methods: {
+        _: (str, params, addLineBreak) => localization.get(str, params, addLineBreak),
+    },
+});
 
 new Vue({
     router,
@@ -29,29 +29,6 @@ new Vue({
     render: h => h(App),
 }).$mount("#app");
 
-
-
-// if (window.requestIdleCallback) {
-//     requestIdleCallback(function () {
-//         Fingerprint2.get(function (components) {
-//             console.log(components) // an array of components: {key: ..., value: ...}
-//         })
-//     })
-// } else {
-// setTimeout(function () {
-//     Fingerprint2.get(function (components: any[]) {
-//
-//         console.log(components); // an array of components: {key: ..., value: ...}
-//
-//         const exclude = ["plugins", "adBlock", "canvas"];
-//         components = components.filter(el => exclude.indexOf(el.key) === -1);
-//         const values = components.map(el => el.value);
-//         const murmur = Fingerprint2.x64hash128(values.join(""), 31);
-//         document.body.append(murmur);
-//         document.body.append(components[0].value);
-//         // console.log("finger print", murmur);
-//     });
-// }, 500);
 
 if ("addEventListener" in document) {
     document.addEventListener(
@@ -62,4 +39,5 @@ if ("addEventListener" in document) {
         false,
     );
 }
-// }
+
+console.log(localization.get("spend_title_timeloop", { amount: 123, coin: "TIME" }));

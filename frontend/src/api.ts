@@ -31,11 +31,16 @@ export async function post(endpoint: string, data: any): Promise<any> {
         navigator.vendor,
     ];
 
-    const response = await axios.post(url, data);
+    try {
+        const response = await axios.post(url, data);
 
-    if (response.status === 200) {
-        return response.data;
+        if (response.status === 200) {
+            return response.data;
+        }
+    } catch(e) {
+
     }
+
 
     return null;
 }

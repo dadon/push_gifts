@@ -18,7 +18,7 @@ let mobile: boolean = undefined;
 export function isMobile() {
     if (mobile === undefined) {
         mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Mobile/i.test(
-            navigator.userAgent
+            navigator.userAgent,
         );
     }
 
@@ -65,7 +65,7 @@ export function selectAllAndCopy(el: any) {
         el.readOnly = readOnly; // Restore previous readOnly status
 
         if (document.queryCommandSupported("copy")) {
-            return document.execCommand('copy');
+            return document.execCommand("copy");
         } else {
             if (!navigator.userAgent.match(/ipad|ipod|iphone|android|silk/i))
                 return false;
@@ -83,4 +83,19 @@ export function getWindowHeight() {
 
 export function getWindowMinHeight() {
     return Math.min(document.documentElement.clientHeight, window.innerHeight || 0);
+}
+
+export function getLocale(): string {
+    let locale = "en";
+
+    const params: any = getSearchParams();
+    if (params && params["locale"]) {
+        locale = params["locale"];
+    } else {
+        if (navigator.languages && navigator.languages.length) {
+            locale = navigator.languages[0];
+        }
+    }
+
+    return locale;
 }

@@ -1,0 +1,61 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "A26H28FPZU.MNT.BipWallet",
+        "paths": [
+          "tx",
+          "send",
+          "receive",
+          "settings",
+          "transactions",
+          "delegations",
+          "convert"
+        ]
+      },
+      {
+        "appID": "A26H28FPZU.MNT.BipWalletTestnet",
+        "paths": [
+          "tx",
+          "send",
+          "receive",
+          "settings",
+          "transactions",
+          "delegations",
+          "convert"
+        ]
+      },
+      {
+        "appID": "C5S22Z3J44.Rundax.Wallet",
+        "paths": [
+          "tx",
+          "send",
+          "receive",
+          "settings",
+          "transactions",
+          "delegations",
+          "convert"
+        ]
+      },
+      {
+        "appID": "C5S22Z3J44.Rundax.WalletTestnet",
+        "paths": [
+          "tx",
+          "send",
+          "receive",
+          "settings",
+          "transactions",
+          "delegations",
+          "convert"
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "C5S22Z3J44.Rundax.Wallet",
+      "C5S22Z3J44.Rundax.WalletTestnet"
+    ]
+  }
+}

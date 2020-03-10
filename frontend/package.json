@@ -8,11 +8,8 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
-    "buefy": "^0.8.10",
-    "core-js": "^3.4.4",
     "date-fns": "^2.9.0",
     "fastclick": "^1.0.6",
-    "fingerprintjs2": "^2.1.0",
     "mini.css": "^3.0.1",
     "minter-js-sdk": "^0.28.0",
     "nanoid": "^2.1.10",
@@ -28,8 +25,10 @@
     "@vue/cli-plugin-typescript": "^4.1.0",
     "@vue/cli-plugin-vuex": "^4.1.0",
     "@vue/cli-service": "^4.1.0",
+    "csvtojson": "^2.0.10",
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
+    "shelljs": "^0.8.3",
     "typescript": "~3.5.3",
     "vue-template-compiler": "^2.6.10"
   }

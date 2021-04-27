@@ -35,7 +35,7 @@
     "minterjs-wallet": "^4.0.4",
     "nanoid": "^2.1.4",
     "nodemailer": "^6.4.2",
-    "redis": "^2.8.0",
+    "redis": "^3.1.1",
     "telegraf": "^3.36.0",
     "tsoa": "^2.5.13",
     "twilio": "^3.39.3"

@@ -34,7 +34,7 @@
     "minter-js-sdk": "^0.26.1",
     "minterjs-wallet": "^4.0.4",
     "nanoid": "^2.1.4",
-    "nodemailer": "^6.4.2",
+    "nodemailer": "^6.4.16",
     "redis": "^2.8.0",
     "telegraf": "^3.36.0",
     "tsoa": "^2.5.13",

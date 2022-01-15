@@ -28,7 +28,7 @@
     "csvtojson": "^2.0.10",
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
-    "shelljs": "^0.8.3",
+    "shelljs": "^0.8.5",
     "typescript": "~3.5.3",
     "vue-template-compiler": "^2.6.10"
   }

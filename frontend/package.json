@@ -12,7 +12,7 @@
     "fastclick": "^1.0.6",
     "mini.css": "^3.0.1",
     "minter-js-sdk": "^0.28.0",
-    "nanoid": "^2.1.10",
+    "nanoid": "^3.1.31",
     "qrcode": "^1.4.4",
     "vue": "^2.6.10",
     "vue-router": "^3.1.3",

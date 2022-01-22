@@ -33,7 +33,7 @@
     "geoip-country": "^4.0.3",
     "minter-js-sdk": "^0.26.1",
     "minterjs-wallet": "^4.0.4",
-    "nanoid": "^2.1.4",
+    "nanoid": "^3.1.31",
     "nodemailer": "^6.4.2",
     "redis": "^2.8.0",
     "telegraf": "^3.36.0",
